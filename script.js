@@ -32,7 +32,6 @@ function attachGlow(element) {
 
 document.querySelectorAll('.glow-wrapper').forEach(attachGlow);
 
-/* --- Primeira Letra Maiúscula nos Inputs --- */
 function setupAutoCapitalize(elementId) {
     const el = document.getElementById(elementId);
     if (!el) return;
@@ -78,6 +77,7 @@ function render(skipEntranceAnimation = false) {
         } else {
             inner.innerHTML = `
                 <div class="card-title">${item.title}</div>
+                <div class="card-text">${item.text}</div>
                 <div class="edit-mode-ui">
                     <div class="edit-actions">
                         <div class="glow-wrapper circle-wrapper" style="--glow-color: #FF3B30">
@@ -91,6 +91,8 @@ function render(skipEntranceAnimation = false) {
                             </button>
                         </div>
                     </div>
+                    
+                    <div class="divider-vertical"></div>
                     
                     <div class="reorder-actions">
                         <div class="glow-wrapper circle-wrapper" style="--glow-color: #007AFF">
@@ -114,9 +116,7 @@ function render(skipEntranceAnimation = false) {
     });
 }
 
-/* --- Reordenação Animada (Técnica FLIP) --- */
 function animateSwap(index1, index2) {
-    // 1. Posições originais dos cards antes da troca
     const oldPositions = new Map();
     Array.from(cardList.children).forEach(card => {
         if (card.dataset.id) {
@@ -124,16 +124,12 @@ function animateSwap(index1, index2) {
         }
     });
 
-    // 2. Troca os elementos no array
     const temp = texts[index1];
     texts[index1] = texts[index2];
     texts[index2] = temp;
     saveTexts();
-
-    // 3. Renderiza novamente sem animação de entrada
     render(true);
 
-    // 4. Calcula o deslocamento e aplica o deslize fluido
     Array.from(cardList.children).forEach(card => {
         const id = card.dataset.id;
         const oldTop = oldPositions.get(id);
@@ -142,15 +138,10 @@ function animateSwap(index1, index2) {
             const deltaY = oldTop - newTop;
 
             if (deltaY !== 0) {
-                // Move instantaneamente para onde estava
                 card.style.animation = 'none';
                 card.style.transform = `translateY(${deltaY}px)`;
                 card.style.transition = 'none';
-
-                // Força reflow do navegador
                 card.offsetHeight;
-
-                // Anima suavemente até a nova posição
                 requestAnimationFrame(() => {
                     card.style.transition = 'transform 0.35s cubic-bezier(0.16, 1, 0.3, 1)';
                     card.style.transform = 'translateY(0)';
@@ -162,37 +153,30 @@ function animateSwap(index1, index2) {
 
 window.moveUp = function(id) {
     const index = texts.findIndex(t => t.id === id);
-    if (index > 0) {
-        animateSwap(index, index - 1);
-    }
+    if (index > 0) animateSwap(index, index - 1);
 };
 
 window.moveDown = function(id) {
     const index = texts.findIndex(t => t.id === id);
-    if (index < texts.length - 1) {
-        animateSwap(index, index + 1);
-    }
+    if (index < texts.length - 1) animateSwap(index, index + 1);
 };
 
-/* --- Feedback Visual de Cópia --- */
 function triggerCopyFeedback(color) {
     screenFlash.style.boxShadow = `inset 0 0 45px 12px ${color || '#34C759'}`;
     screenFlash.classList.add('active');
     setTimeout(() => screenFlash.classList.remove('active'), 250);
 }
 
-/* --- Controle do Modo de Edição --- */
 btnEdit.parentElement.addEventListener('click', () => {
     isEditMode = !isEditMode;
     btnEdit.innerText = isEditMode ? 'Concluído' : 'Editar';
     
-    wrapEdit.style.setProperty('--glow-color', isEditMode ? '#34C759' : '#007AFF');
-    wrapCreate.style.display = isEditMode ? 'none' : 'block';
+    wrapEdit.style.setProperty('--glow-color', isEditMode ? '#34C759' : '#AF52DE');
+    wrapCreate.classList.toggle('hide-anim', isEditMode);
     
     render();
 });
 
-/* --- Lógica de Exclusão --- */
 window.confirmDelete = function(id) {
     deleteTargetId = id;
     confirmModal.classList.add('active');
@@ -212,7 +196,6 @@ window.executeDelete = function() {
     }
 }
 
-/* --- Lógica do Modal Principal --- */
 window.openEdit = function(id) {
     const item = texts.find(t => t.id === id);
     document.getElementById('input-title').value = item.title;

@@ -7,7 +7,6 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <!-- Flash suave na borda da tela ao copiar -->
     <div id="screen-flash" class="screen-flash"></div>
 
     <div class="app-container" id="app-container">
@@ -19,18 +18,16 @@
                         Criar
                     </button>
                 </div>
-                <div class="glow-wrapper" id="wrap-edit" style="--glow-color: #007AFF;">
+                <div class="glow-wrapper" id="wrap-edit" style="--glow-color: #AF52DE;">
                     <button id="btn-edit" class="glow-inner mac-btn">Editar</button>
                 </div>
             </div>
         </header>
         
         <main id="card-list" class="card-list">
-            <!-- Cards carregados via JS -->
         </main>
     </div>
 
-    <!-- Modal de Criação / Edição -->
     <div id="modal" class="modal">
         <div class="modal-backdrop" onclick="closeModal()"></div>
         <div class="modal-content mac-window">
@@ -60,7 +57,6 @@
         </div>
     </div>
 
-    <!-- Modal de Confirmação de Exclusão -->
     <div id="confirm-modal" class="modal">
         <div class="modal-backdrop" onclick="closeConfirmModal()"></div>
         <div class="modal-content mac-window confirm-window">
