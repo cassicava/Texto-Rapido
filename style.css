@@ -1,0 +1,406 @@
+:root {
+    --text-main: #000000;
+    --text-muted: #48484a;
+    --bg-color: rgba(240, 240, 245, 0.6);
+    --card-radius: 24px;
+    --inner-radius: 22px;
+}
+
+* { 
+    box-sizing: border-box; 
+    margin: 0; 
+    padding: 0; 
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
+}
+
+body {
+    background-color: #e5e5ea;
+    background-image: radial-gradient(circle at top left, #ffffff 0%, transparent 50%),
+                      radial-gradient(circle at bottom right, #ffffff 0%, transparent 50%);
+    display: flex; 
+    height: 100vh; 
+    width: 100vw;
+    overflow: hidden;
+}
+
+/* Flash verde nas bordas ao copiar */
+.screen-flash {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 9999;
+    box-shadow: inset 0 0 45px 12px #34C759;
+    opacity: 0;
+    transition: opacity 0.15s ease-out, box-shadow 0.15s ease-out;
+}
+.screen-flash.active {
+    opacity: 1;
+}
+
+/* Container Responsivo */
+.app-container {
+    width: 100%;
+    height: 100vh;
+    background: var(--bg-color);
+    backdrop-filter: blur(40px) saturate(180%); 
+    -webkit-backdrop-filter: blur(40px) saturate(180%);
+    display: flex; 
+    flex-direction: column;
+}
+
+.app-header {
+    padding: 20px;
+    display: flex; 
+    justify-content: center; 
+    align-items: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.03);
+    z-index: 10;
+}
+
+.header-actions {
+    display: flex; 
+    gap: 16px; 
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    max-width: 500px;
+}
+
+/* Borda visível nos botões do Header */
+.header-actions .glow-inner {
+    border: 2px solid rgba(0, 0, 0, 0.12);
+    background: rgba(255, 255, 255, 0.45);
+}
+
+/* Efeito Glow / Reflexo de luz */
+.glow-wrapper {
+    position: relative;
+    padding: 2px;
+    border-radius: var(--card-radius);
+    background: transparent;
+    overflow: hidden;
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease;
+}
+
+.glow-wrapper::before {
+    content: '';
+    position: absolute; 
+    inset: 0;
+    background: radial-gradient(circle 140px at var(--mouse-x, 50%) var(--mouse-y, 50%), var(--glow-color) 0%, transparent 100%);
+    opacity: 0; 
+    transition: opacity 0.3s ease; 
+    pointer-events: none;
+    z-index: 0;
+}
+
+.glow-wrapper:hover {
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+}
+
+/* Reflexo nas bordas dos Cards */
+.card-wrapper.glow-wrapper::before {
+    background: radial-gradient(circle 180px at var(--mouse-x, 50%) var(--mouse-y, 50%), var(--glow-color) 0%, transparent 80%);
+}
+
+.card-wrapper.glow-wrapper:hover::before { 
+    opacity: 0.65; 
+}
+
+.header-actions .glow-wrapper:hover::before {
+    opacity: 0.8;
+}
+
+.glow-wrapper:active { 
+    transform: scale(0.97); 
+}
+
+/* Estética Glassmorphism */
+.glow-inner, .modal-content {
+    position: relative; 
+    z-index: 1;
+    border-radius: var(--inner-radius);
+    background: linear-gradient(135deg, rgba(255,255,255,0.75) 0%, rgba(255,255,255,0.35) 100%);
+    backdrop-filter: blur(25px) saturate(200%); 
+    -webkit-backdrop-filter: blur(25px) saturate(200%);
+    border: 1.5px solid rgba(255, 255, 255, 0.8);
+    box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.9);
+    width: 100%; 
+    height: 100%;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card-wrapper.glow-wrapper:hover .glow-inner {
+    border-color: var(--glow-color);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08), 0 0 15px var(--glow-color);
+}
+
+/* Botões Superiores */
+.mac-btn {
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    gap: 8px;
+    border: none; 
+    cursor: pointer; 
+    outline: none;
+    padding: 12px 24px; 
+    font-size: 1.15rem; 
+    font-weight: 700;
+    color: var(--text-main);
+    background: transparent;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.glow-wrapper:hover .mac-btn {
+    background: var(--glow-color);
+    color: #ffffff !important;
+    border-color: transparent;
+    box-shadow: none;
+}
+
+.mac-btn.large { 
+    padding: 16px; 
+    font-size: 1.2rem; 
+}
+
+/* Botão de Excluir */
+.btn-danger {
+    color: #FF3B30;
+}
+
+.glow-wrapper:hover .btn-danger {
+    background: #FF3B30 !important;
+    color: #ffffff !important;
+}
+
+/* Lista de Cards */
+.card-list {
+    flex: 1; 
+    overflow-y: auto; 
+    overflow-x: hidden;
+    padding: 24px 20px 60px;
+    display: flex; 
+    flex-direction: column; 
+    gap: 16px;
+    position: relative;
+}
+
+.card-wrapper {
+    animation: fadeInUp 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    opacity: 0;
+    transform: translateY(15px);
+    will-change: transform, opacity;
+}
+
+@keyframes fadeInUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.card-content { 
+    padding: 22px 24px; 
+    cursor: pointer; 
+    transition: background 0.3s ease;
+}
+
+.card-title {
+    font-weight: 700; 
+    color: var(--text-main);
+    font-size: 1.4rem;
+    line-height: 1.3;
+}
+
+.card-text {
+    font-size: 1.15rem; 
+    color: var(--text-muted); 
+    margin-top: 8px;
+    white-space: nowrap; 
+    overflow: hidden; 
+    text-overflow: ellipsis; 
+    line-height: 1.4;
+    font-weight: 500;
+}
+
+/* Painel do Modo de Edição */
+.edit-mode-ui {
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    margin-top: 16px;
+}
+
+.edit-actions { 
+    display: flex; 
+    gap: 12px; 
+}
+
+.reorder-actions {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.circle-wrapper { 
+    border-radius: 50%; 
+}
+
+/* Botões de Ação na Edição */
+.circle-btn, .arrow-btn {
+    width: 46px; 
+    height: 46px; 
+    border-radius: 50%;
+    display: flex; 
+    align-items: center; 
+    justify-content: center;
+    border: none; 
+    background: transparent; 
+    color: var(--text-muted); 
+    cursor: pointer;
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.arrow-btn:disabled {
+    opacity: 0.25;
+    cursor: not-allowed;
+}
+
+.glow-wrapper:hover .circle-btn,
+.glow-wrapper:hover .arrow-btn:not(:disabled) { 
+    background: var(--glow-color); 
+    color: white !important; 
+}
+
+/* Modal e Backdrop Animados */
+.modal {
+    position: fixed; 
+    inset: 0; 
+    z-index: 1000;
+    display: flex; 
+    align-items: center; 
+    justify-content: center;
+    pointer-events: none;
+}
+
+.modal.active {
+    pointer-events: auto;
+}
+
+.modal-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.15);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    opacity: 0;
+    transition: opacity 0.25s ease;
+}
+
+.modal.active .modal-backdrop {
+    opacity: 1;
+}
+
+.modal-content {
+    border-radius: 28px; 
+    width: 90%; 
+    max-width: 460px; 
+    height: 520px;
+    padding: 32px;
+    box-shadow: 0 30px 60px rgba(0,0,0,0.15), inset 0 1px 2px rgba(255,255,255,0.8);
+    display: flex; 
+    flex-direction: column; 
+    gap: 16px; 
+    text-align: center;
+    opacity: 0;
+    transform: scale(0.92) translateY(20px); 
+    transition: opacity 0.2s ease, transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.modal.active .modal-content {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+    transition: opacity 0.3s ease 0.1s, transform 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.1s;
+}
+
+.modal-content h2 { 
+    font-size: 1.6rem; 
+    font-weight: 700; 
+    color: var(--text-main); 
+}
+
+.modal-content input, .modal-content textarea {
+    width: 100%; 
+    border: 1px solid rgba(0, 0, 0, 0.08); 
+    border-radius: 18px; 
+    padding: 16px 20px;
+    background: rgba(255,255,255,0.65); 
+    font-size: 1.2rem; 
+    font-weight: 500;
+    outline: none;
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.03); 
+    transition: all 0.3s ease;
+}
+
+.modal-content input {
+    flex: 0 0 auto;
+}
+
+.modal-content textarea { 
+    resize: none; 
+    flex: 1;
+}
+
+.modal-content input:focus, .modal-content textarea:focus { 
+    border-color: rgba(0,122,255,0.5);
+    background: rgba(255,255,255,0.95);
+    box-shadow: 0 0 0 4px rgba(0,122,255,0.15), inset 0 2px 4px rgba(0,0,0,0.02); 
+}
+
+.color-picker { 
+    display: flex; 
+    justify-content: center; 
+    gap: 12px; 
+    margin: 6px 0; 
+}
+
+.color-swatch {
+    width: 36px; 
+    height: 36px; 
+    border-radius: 50%; 
+    cursor: pointer;
+    border: 3px solid transparent; 
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.color-swatch.selected { 
+    border-color: #ffffff; 
+    transform: scale(1.22); 
+    box-shadow: 0 6px 16px rgba(0,0,0,0.25), 0 0 0 2px rgba(0,0,0,0.1); 
+}
+
+.modal-actions { 
+    display: flex; 
+    flex-direction: column; 
+    gap: 12px; 
+}
+
+/* Modal de Confirmação */
+.confirm-window {
+    height: 240px; 
+    justify-content: center;
+}
+
+.confirm-window p {
+    color: var(--text-muted);
+    font-size: 1.15rem;
+    line-height: 1.4;
+    margin-bottom: 8px;
+}
+
+.confirm-actions {
+    flex-direction: row;
+    gap: 16px;
+}

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Textos Rápidos</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Flash suave na borda da tela ao copiar -->
+    <div id="screen-flash" class="screen-flash"></div>
+
+    <div class="app-container" id="app-container">
+        <header class="app-header">
+            <div class="header-actions">
+                <div class="glow-wrapper" id="wrap-create" style="--glow-color: #007AFF;">
+                    <button id="btn-create" class="glow-inner mac-btn">
+                        <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                        Criar
+                    </button>
+                </div>
+                <div class="glow-wrapper" id="wrap-edit" style="--glow-color: #007AFF;">
+                    <button id="btn-edit" class="glow-inner mac-btn">Editar</button>
+                </div>
+            </div>
+        </header>
+        
+        <main id="card-list" class="card-list">
+            <!-- Cards carregados via JS -->
+        </main>
+    </div>
+
+    <!-- Modal de Criação / Edição -->
+    <div id="modal" class="modal">
+        <div class="modal-backdrop" onclick="closeModal()"></div>
+        <div class="modal-content mac-window">
+            <h2 id="modal-title">Novo Texto</h2>
+            
+            <input type="text" id="input-title" placeholder="Título (ex: Nega Alergia)" autocomplete="off" autocapitalize="sentences">
+            <textarea id="input-text" placeholder="Texto completo para cópia..." autocapitalize="sentences"></textarea>
+            
+            <div class="color-picker">
+                <div class="color-swatch selected" data-color="#007AFF" style="background: #007AFF" title="Azul"></div>
+                <div class="color-swatch" data-color="#FF99C8" style="background: #FF99C8" title="Rosa Claro"></div>
+                <div class="color-swatch" data-color="#FFD166" style="background: #FFD166" title="Amarelo Claro"></div>
+                <div class="color-swatch" data-color="#5AC8FA" style="background: #5AC8FA" title="Ciano Claro"></div>
+                <div class="color-swatch" data-color="#34C759" style="background: #34C759" title="Verde"></div>
+                <div class="color-swatch" data-color="#AF52DE" style="background: #AF52DE" title="Roxo"></div>
+                <div class="color-swatch" data-color="#FF3B30" style="background: #FF3B30" title="Vermelho"></div>
+            </div>
+
+            <div class="modal-actions">
+                <div class="glow-wrapper" style="--glow-color: #007AFF; width: 100%;">
+                    <button id="btn-save" class="glow-inner mac-btn large">Salvar</button>
+                </div>
+                <div class="glow-wrapper" style="--glow-color: #86868b; width: 100%;">
+                    <button id="btn-cancel" class="glow-inner mac-btn large" onclick="closeModal()">Cancelar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Confirmação de Exclusão -->
+    <div id="confirm-modal" class="modal">
+        <div class="modal-backdrop" onclick="closeConfirmModal()"></div>
+        <div class="modal-content mac-window confirm-window">
+            <h2 style="color: #FF3B30;">Excluir Modelo?</h2>
+            <p>Esta ação não poderá ser desfeita. O texto será apagado permanentemente.</p>
+            <div class="modal-actions confirm-actions">
+                <div class="glow-wrapper" style="--glow-color: #86868b; width: 100%;">
+                    <button class="glow-inner mac-btn" onclick="closeConfirmModal()">Cancelar</button>
+                </div>
+                <div class="glow-wrapper" style="--glow-color: #FF3B30; width: 100%;">
+                    <button class="glow-inner mac-btn btn-danger" onclick="executeDelete()">Excluir</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
