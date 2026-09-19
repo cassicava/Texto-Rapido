@@ -14,8 +14,8 @@
             <div class="header-actions">
                 <div class="glow-wrapper" id="wrap-create" style="--glow-color: #007AFF;">
                     <button id="btn-create" class="glow-inner mac-btn">
-                        <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-                        Criar
+                        <svg class="create-icon" viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                        <span id="btn-create-text">Criar</span>
                     </button>
                 </div>
                 <div class="glow-wrapper" id="wrap-edit" style="--glow-color: #AF52DE;">
@@ -24,39 +24,37 @@
             </div>
         </header>
         
-        <main id="card-list" class="card-list">
+        <main id="main-content" class="main-content">
+            <!-- Lista de Cards -->
+            <div id="card-list" class="card-list"></div>
+
+            <!-- Área Inline (Utilizada tanto para Criar quanto para Editar) -->
+            <div id="inline-create-container" class="inline-create-container">
+                <div class="inline-create-inner">
+                    <h2 id="inline-form-title">Novo Texto</h2>
+                    
+                    <input type="text" id="inline-input-title" placeholder="Título (ex: Nega Alergia)" autocomplete="off" autocapitalize="sentences">
+                    <textarea id="inline-input-text" placeholder="Texto completo para cópia..." autocapitalize="sentences"></textarea>
+                    
+                    <div class="color-picker">
+                        <div class="color-swatch selected" data-color="#007AFF" style="background: #007AFF" title="Azul"></div>
+                        <div class="color-swatch" data-color="#FF99C8" style="background: #FF99C8" title="Rosa Claro"></div>
+                        <div class="color-swatch" data-color="#FFD166" style="background: #FFD166" title="Amarelo Claro"></div>
+                        <div class="color-swatch" data-color="#5AC8FA" style="background: #5AC8FA" title="Ciano Claro"></div>
+                        <div class="color-swatch" data-color="#34C759" style="background: #34C759" title="Verde"></div>
+                        <div class="color-swatch" data-color="#AF52DE" style="background: #AF52DE" title="Roxo"></div>
+                        <div class="color-swatch" data-color="#FF3B30" style="background: #FF3B30" title="Vermelho"></div>
+                    </div>
+
+                    <div class="glow-wrapper" style="--glow-color: #34C759; width: 100%;">
+                        <button id="inline-btn-save" class="glow-inner mac-btn large btn-success-custom">Salvar</button>
+                    </div>
+                </div>
+            </div>
         </main>
     </div>
 
-    <div id="modal" class="modal">
-        <div class="modal-backdrop" onclick="closeModal()"></div>
-        <div class="modal-content mac-window">
-            <h2 id="modal-title">Novo Texto</h2>
-            
-            <input type="text" id="input-title" placeholder="Título (ex: Nega Alergia)" autocomplete="off" autocapitalize="sentences">
-            <textarea id="input-text" placeholder="Texto completo para cópia..." autocapitalize="sentences"></textarea>
-            
-            <div class="color-picker">
-                <div class="color-swatch selected" data-color="#007AFF" style="background: #007AFF" title="Azul"></div>
-                <div class="color-swatch" data-color="#FF99C8" style="background: #FF99C8" title="Rosa Claro"></div>
-                <div class="color-swatch" data-color="#FFD166" style="background: #FFD166" title="Amarelo Claro"></div>
-                <div class="color-swatch" data-color="#5AC8FA" style="background: #5AC8FA" title="Ciano Claro"></div>
-                <div class="color-swatch" data-color="#34C759" style="background: #34C759" title="Verde"></div>
-                <div class="color-swatch" data-color="#AF52DE" style="background: #AF52DE" title="Roxo"></div>
-                <div class="color-swatch" data-color="#FF3B30" style="background: #FF3B30" title="Vermelho"></div>
-            </div>
-
-            <div class="modal-actions">
-                <div class="glow-wrapper" style="--glow-color: #007AFF; width: 100%;">
-                    <button id="btn-save" class="glow-inner mac-btn large">Salvar</button>
-                </div>
-                <div class="glow-wrapper" style="--glow-color: #86868b; width: 100%;">
-                    <button id="btn-cancel" class="glow-inner mac-btn large" onclick="closeModal()">Cancelar</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
+    <!-- Modal de Confirmação de Exclusão -->
     <div id="confirm-modal" class="modal">
         <div class="modal-backdrop" onclick="closeConfirmModal()"></div>
         <div class="modal-content mac-window confirm-window">

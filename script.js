@@ -5,18 +5,22 @@ let texts = JSON.parse(localStorage.getItem('ubs-historico')) || [
 ];
 
 let isEditMode = false;
+let currentMode = 'list'; // 'list' | 'create' | 'edit'
 let editingId = null;
 let selectedColor = '#007AFF';
 let deleteTargetId = null;
 
 const cardList = document.getElementById('card-list');
-const modal = document.getElementById('modal');
+const inlineCreateContainer = document.getElementById('inline-create-container');
 const confirmModal = document.getElementById('confirm-modal');
 const screenFlash = document.getElementById('screen-flash');
 
 const wrapCreate = document.getElementById('wrap-create');
 const wrapEdit = document.getElementById('wrap-edit');
+const btnCreate = document.getElementById('btn-create');
+const btnCreateText = document.getElementById('btn-create-text');
 const btnEdit = document.getElementById('btn-edit');
+const inlineInputText = document.getElementById('inline-input-text');
 
 function saveTexts() { 
     localStorage.setItem('ubs-historico', JSON.stringify(texts)); 
@@ -42,8 +46,16 @@ function setupAutoCapitalize(elementId) {
     });
 }
 
-setupAutoCapitalize('input-title');
-setupAutoCapitalize('input-text');
+setupAutoCapitalize('inline-input-title');
+setupAutoCapitalize('inline-input-text');
+
+// Auto-expand do Textarea até ~10 linhas com scrollbar
+function autoResizeTextarea() {
+    inlineInputText.style.height = 'auto';
+    inlineInputText.style.height = inlineInputText.scrollHeight + 'px';
+}
+
+inlineInputText.addEventListener('input', autoResizeTextarea);
 
 function render(skipEntranceAnimation = false) {
     cardList.innerHTML = '';
@@ -167,7 +179,9 @@ function triggerCopyFeedback(color) {
     setTimeout(() => screenFlash.classList.remove('active'), 250);
 }
 
+/* --- Controle do Modo de Edição da Lista --- */
 btnEdit.parentElement.addEventListener('click', () => {
+    if (currentMode !== 'list') return;
     isEditMode = !isEditMode;
     btnEdit.innerText = isEditMode ? 'Concluído' : 'Editar';
     
@@ -176,6 +190,85 @@ btnEdit.parentElement.addEventListener('click', () => {
     
     render();
 });
+
+/* --- Controle do Botão Superior (Criar / Fechar / Cancelar Edição) --- */
+btnCreate.parentElement.addEventListener('click', () => {
+    if (isEditMode) return;
+
+    if (currentMode === 'list') {
+        openCreateMode();
+    } else {
+        closeInlineForm();
+    }
+});
+
+function openCreateMode() {
+    currentMode = 'create';
+    editingId = null;
+    isEditMode = false;
+    btnEdit.innerText = 'Editar';
+    
+    btnCreateText.innerText = 'Fechar';
+    btnCreate.querySelector('svg').style.transform = 'rotate(45deg)';
+    wrapCreate.style.setProperty('--glow-color', '#FF3B30');
+    wrapCreate.classList.remove('hide-anim');
+    wrapEdit.classList.add('hide-anim');
+    
+    document.getElementById('inline-form-title').innerText = 'Novo Texto';
+    document.getElementById('inline-input-title').value = '';
+    inlineInputText.value = '';
+    autoResizeTextarea();
+    document.getElementById('inline-btn-save').innerText = 'Salvar';
+    selectInlineColor('#007AFF');
+
+    cardList.classList.add('hidden');
+    inlineCreateContainer.classList.add('active');
+    document.getElementById('inline-input-title').focus();
+}
+
+window.openEdit = function(id) {
+    const item = texts.find(t => t.id === id);
+    if (!item) return;
+
+    currentMode = 'edit';
+    editingId = id;
+    isEditMode = false;
+    btnEdit.innerText = 'Editar';
+
+    btnCreateText.innerText = 'Cancelar Edição';
+    btnCreate.querySelector('svg').style.transform = 'rotate(45deg)';
+    wrapCreate.style.setProperty('--glow-color', '#FF3B30'); // Efeito vermelho ao cancelar edição
+    wrapCreate.classList.remove('hide-anim');
+    wrapEdit.classList.add('hide-anim');
+
+    document.getElementById('inline-form-title').innerText = 'Editar Texto';
+    document.getElementById('inline-input-title').value = item.title;
+    inlineInputText.value = item.text;
+    autoResizeTextarea();
+    document.getElementById('inline-btn-save').innerText = 'Salvar Edição';
+    selectInlineColor(item.color);
+
+    cardList.classList.add('hidden');
+    inlineCreateContainer.classList.add('active');
+    document.getElementById('inline-input-title').focus();
+}
+
+function closeInlineForm() {
+    currentMode = 'list';
+    editingId = null;
+    isEditMode = false;
+    btnEdit.innerText = 'Editar';
+    
+    btnCreateText.innerText = 'Criar';
+    btnCreate.querySelector('svg').style.transform = 'rotate(0deg)';
+    wrapCreate.style.setProperty('--glow-color', '#007AFF');
+    wrapCreate.classList.remove('hide-anim');
+    wrapEdit.classList.remove('hide-anim');
+
+    inlineCreateContainer.classList.remove('active');
+    cardList.classList.remove('hidden');
+    render();
+}
 
 window.confirmDelete = function(id) {
     deleteTargetId = id;
@@ -196,64 +289,41 @@ window.executeDelete = function() {
     }
 }
 
-window.openEdit = function(id) {
-    const item = texts.find(t => t.id === id);
-    document.getElementById('input-title').value = item.title;
-    document.getElementById('input-text').value = item.text;
-    selectColor(item.color);
-    editingId = id;
-    document.getElementById('modal-title').innerText = 'Editar Texto';
-    openModal();
-}
-
-document.getElementById('btn-create').parentElement.addEventListener('click', () => {
-    editingId = null;
-    document.getElementById('input-title').value = '';
-    document.getElementById('input-text').value = '';
-    document.getElementById('modal-title').innerText = 'Novo Texto';
-    selectColor('#007AFF');
-    openModal();
-});
-
-window.openModal = function() {
-    modal.classList.add('active');
-}
-
-window.closeModal = function() {
-    modal.classList.remove('active');
-}
-
-document.getElementById('btn-save').parentElement.addEventListener('click', () => {
-    let title = document.getElementById('input-title').value.trim();
-    let text = document.getElementById('input-text').value.trim();
+/* Salvar do Painel Inline (Criação ou Edição) */
+document.getElementById('inline-btn-save').parentElement.addEventListener('click', () => {
+    let title = document.getElementById('inline-input-title').value.trim();
+    let text = inlineInputText.value.trim();
     
     if (title && text) {
         title = title.charAt(0).toUpperCase() + title.slice(1);
         text = text.charAt(0).toUpperCase() + text.slice(1);
 
-        if (editingId) {
-            const item = texts.find(t => t.id === editingId);
-            item.title = title; 
-            item.text = text; 
-            item.color = selectedColor;
-        } else {
+        if (currentMode === 'create') {
             texts.push({ id: Date.now(), title, text, color: selectedColor });
+        } else if (currentMode === 'edit' && editingId !== null) {
+            const item = texts.find(t => t.id === editingId);
+            if (item) {
+                item.title = title;
+                item.text = text;
+                item.color = selectedColor;
+            }
         }
+
         saveTexts(); 
         render(); 
-        closeModal();
+        closeInlineForm();
     }
 });
 
-function selectColor(colorHex) {
-    document.querySelectorAll('.color-swatch').forEach(s => {
+function selectInlineColor(colorHex) {
+    document.querySelectorAll('#inline-create-container .color-swatch').forEach(s => {
         s.classList.toggle('selected', s.dataset.color === colorHex);
     });
     selectedColor = colorHex;
 }
 
-document.querySelectorAll('.color-swatch').forEach(swatch => {
-    swatch.addEventListener('click', (e) => selectColor(e.target.dataset.color));
+document.querySelectorAll('#inline-create-container .color-swatch').forEach(swatch => {
+    swatch.addEventListener('click', (e) => selectInlineColor(e.target.dataset.color));
 });
 
 render();

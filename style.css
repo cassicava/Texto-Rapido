@@ -83,24 +83,38 @@ body {
     max-width: 500px;
 }
 
-/* Transição Animada do Botão Criar */
-#wrap-create {
-    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-    max-width: 200px;
+/* Transições Animadas dos Botões do Header */
+#wrap-create, #wrap-edit {
+    transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
     opacity: 1;
-    transform: scale(1);
+    transform: scale(1) translateY(0);
+    visibility: visible;
 }
-#wrap-create.hide-anim {
-    max-width: 0;
+#wrap-create.hide-anim, #wrap-edit.hide-anim {
     opacity: 0;
+    transform: scale(0.9) translateY(-10px);
+    pointer-events: none;
+    visibility: hidden;
+    position: absolute;
+    width: 0;
+    height: 0;
+    overflow: hidden;
     padding: 0;
     margin: 0;
     border: none;
-    transform: scale(0.5);
-    pointer-events: none;
 }
 
-/* Bordas Mais Visíveis */
+.inline-create-inner textarea {
+    resize: none;
+    min-height: 110px;
+    max-height: 275px; /* Limite de aproximadamente 10 linhas */
+    overflow-y: auto;  /* Ativa a barra de rolagem ao passar do limite */
+}
+
+.create-icon {
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
 .header-actions .glow-inner {
     border: 2px solid rgba(0, 0, 0, 0.18);
     background: rgba(255, 255, 255, 0.45);
@@ -146,7 +160,6 @@ body {
     transform: scale(0.97); 
 }
 
-/* Bordas Mais Visíveis */
 .glow-inner, .modal-content {
     position: relative; 
     z-index: 1;
@@ -203,15 +216,108 @@ body {
     color: #ffffff !important;
 }
 
+/* Botão Salvar com Bordas e Fundo Padrão Bem Visíveis */
+.btn-success-custom {
+    color: #1b8a36;
+    background: rgba(255, 255, 255, 0.88) !important;
+    border: 2px solid rgba(0, 0, 0, 0.22) !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06), inset 0 1px 3px rgba(255, 255, 255, 1) !important;
+}
+.glow-wrapper:hover .btn-success-custom {
+    background: #34C759 !important;
+    color: #ffffff !important;
+    border-color: transparent !important;
+    box-shadow: none !important;
+}
+
+/* Área Principal e Lista */
+.main-content {
+    flex: 1;
+    position: relative;
+    overflow-y: auto;
+    overflow-x: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
 .card-list {
     flex: 1; 
-    overflow-y: auto; 
-    overflow-x: hidden;
     padding: 24px 20px 60px;
     display: flex; 
     flex-direction: column; 
     gap: 16px;
-    position: relative;
+    transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.card-list.hidden {
+    opacity: 0;
+    transform: scale(0.98);
+    pointer-events: none;
+    position: absolute;
+    inset: 0;
+}
+
+/* Painel Inline (Sem Borda de Card) */
+.inline-create-container {
+    position: absolute;
+    inset: 0;
+    padding: 32px 20px 60px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    opacity: 0;
+    transform: scale(0.95) translateY(15px);
+    pointer-events: none;
+    transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1), transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.inline-create-container.active {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+    pointer-events: auto;
+}
+
+.inline-create-inner {
+    width: 100%;
+    max-width: 520px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    text-align: center;
+}
+
+.inline-create-inner h2 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--text-main);
+}
+
+.inline-create-inner input, 
+.inline-create-inner textarea {
+    width: 100%; 
+    border: 1px solid rgba(0, 0, 0, 0.15); 
+    border-radius: 18px; 
+    padding: 16px 20px;
+    background: rgba(255, 255, 255, 0.75); 
+    font-size: 1.2rem; 
+    font-weight: 500;
+    outline: none;
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.03); 
+    transition: all 0.3s ease;
+}
+
+.inline-create-inner textarea {
+    resize: none;
+    min-height: 110px;
+    max-height: 275px; /* Limite de aproximadamente 10 linhas */
+    overflow-y: auto;  /* Ativa a barra de rolagem ao passar do limite */
+}
+
+.inline-create-inner input:focus, 
+.inline-create-inner textarea:focus { 
+    border-color: rgba(0,122,255,0.5);
+    background: rgba(255,255,255,0.95);
+    box-shadow: 0 0 0 4px rgba(0,122,255,0.15), inset 0 2px 4px rgba(0,0,0,0.02); 
 }
 
 .card-wrapper {
@@ -241,7 +347,6 @@ body {
     line-height: 1.3;
 }
 
-/* 2 Linhas Padrão */
 .card-text {
     font-size: 1.1rem; 
     color: var(--text-muted); 
@@ -256,7 +361,6 @@ body {
     white-space: normal;
 }
 
-/* Painel do Modo de Edição */
 .edit-mode-ui {
     display: flex; 
     justify-content: center;
@@ -271,7 +375,6 @@ body {
     align-items: center;
 }
 
-/* Linha Vertical */
 .divider-vertical {
     width: 2px;
     height: 38px;
@@ -340,8 +443,6 @@ body {
     border-radius: 28px; 
     width: 90%; 
     max-width: 460px; 
-    height: 520px;
-    padding: 32px;
     box-shadow: 0 30px 60px rgba(0,0,0,0.15), inset 0 1px 2px rgba(255,255,255,0.8);
     display: flex; 
     flex-direction: column; 
@@ -356,42 +457,6 @@ body {
     opacity: 1;
     transform: scale(1) translateY(0);
     transition: opacity 0.3s ease 0.1s, transform 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.1s;
-}
-
-.modal-content h2 { 
-    font-size: 1.6rem; 
-    font-weight: 700; 
-    color: var(--text-main); 
-}
-
-.modal-content input, .modal-content textarea {
-    width: 100%; 
-    border: 1px solid rgba(0, 0, 0, 0.15); /* Bordas Mais Visíveis */
-    border-radius: 18px; 
-    padding: 16px 20px;
-    background: rgba(255,255,255,0.65); 
-    font-size: 1.2rem; 
-    font-weight: 500;
-    outline: none;
-    box-shadow: inset 0 2px 4px rgba(0,0,0,0.03); 
-    transition: all 0.3s ease;
-}
-
-.modal-content input {
-    flex: 0 0 auto;
-}
-
-/* Espaço Padrão para 2 Linhas no Input */
-.modal-content textarea { 
-    resize: none; 
-    flex: 1;
-    min-height: 80px; 
-}
-
-.modal-content input:focus, .modal-content textarea:focus { 
-    border-color: rgba(0,122,255,0.5);
-    background: rgba(255,255,255,0.95);
-    box-shadow: 0 0 0 4px rgba(0,122,255,0.15), inset 0 2px 4px rgba(0,0,0,0.02); 
 }
 
 .color-picker { 
@@ -427,6 +492,7 @@ body {
 
 .confirm-window {
     height: 240px; 
+    padding: 32px;
     justify-content: center;
 }
 
