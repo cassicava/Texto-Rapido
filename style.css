@@ -11,24 +11,36 @@
     margin: 0; 
     padding: 0; 
     font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
+    /* Bloqueia a seleção de texto em todo o site */
+    user-select: none; 
+    -webkit-user-select: none;
 }
 
-/* --- Scrollbar Personalizada --- */
+/* Permite a seleção de texto e digitação apenas nos campos de input e textarea */
+input, textarea {
+    user-select: auto;
+    -webkit-user-select: auto;
+}
+
+/* --- Scrollbar minimalista (estilo macOS) --- */
 ::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
+    width: 14px; /* Mais largo para acomodar a borda transparente */
+    height: 14px;
 }
 ::-webkit-scrollbar-track {
-    background: rgba(0, 0, 0, 0.03);
-    border-radius: 10px;
-    margin: 4px;
+    background: transparent; /* Remove o fundo feio (trilho invisível) */
 }
 ::-webkit-scrollbar-thumb {
-    background: rgba(0, 0, 0, 0.25);
+    background-color: rgba(0, 0, 0, 0.15);
     border-radius: 10px;
+    /* Cria um espaço invisível em volta da barra para ela parecer flutuante e mais fina */
+    border: 4px solid transparent; 
+    background-clip: padding-box;
 }
 ::-webkit-scrollbar-thumb:hover {
-    background: rgba(0, 0, 0, 0.4);
+    background-color: rgba(0, 0, 0, 0.35);
+    border: 4px solid transparent;
+    background-clip: padding-box;
 }
 
 body {
@@ -72,6 +84,7 @@ body {
     border-bottom: 1px solid rgba(255, 255, 255, 0.5);
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.03);
     z-index: 10;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.6) 0%, rgba(240, 240, 245, 0.2) 100%);
 }
 
 .header-actions {
@@ -83,36 +96,38 @@ body {
     max-width: 500px;
 }
 
-/* Transições Animadas dos Botões do Header */
 #wrap-create, #wrap-edit {
-    transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: max-width 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+                opacity 0.3s ease,
+                transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+                padding 0.4s ease,
+                margin 0.4s ease;
     opacity: 1;
     transform: scale(1) translateY(0);
-    visibility: visible;
+    max-width: 250px;
+    overflow: hidden;
 }
+
 #wrap-create.hide-anim, #wrap-edit.hide-anim {
     opacity: 0;
-    transform: scale(0.9) translateY(-10px);
-    pointer-events: none;
-    visibility: hidden;
-    position: absolute;
-    width: 0;
-    height: 0;
-    overflow: hidden;
-    padding: 0;
+    transform: scale(0.8) translateY(-5px);
+    max-width: 0;
+    padding-left: 0;
+    padding-right: 0;
     margin: 0;
     border: none;
+    pointer-events: none;
 }
 
 .inline-create-inner textarea {
     resize: none;
     min-height: 110px;
-    max-height: 275px; /* Limite de aproximadamente 10 linhas */
-    overflow-y: auto;  /* Ativa a barra de rolagem ao passar do limite */
+    max-height: 275px; 
+    overflow-y: auto; 
 }
 
 .create-icon {
-    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 .header-actions .glow-inner {
@@ -126,7 +141,7 @@ body {
     border-radius: var(--card-radius);
     background: transparent;
     overflow: hidden;
-    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease;
+    transition: transform 0.15s ease, box-shadow 0.3s ease;
 }
 
 .glow-wrapper::before {
@@ -149,7 +164,7 @@ body {
 }
 
 .card-wrapper.glow-wrapper:hover::before { 
-    opacity: 0.75; 
+    opacity: 0.15; 
 }
 
 .header-actions .glow-wrapper:hover::before {
@@ -157,7 +172,7 @@ body {
 }
 
 .glow-wrapper:active { 
-    transform: scale(0.97); 
+    transform: scale(0.93) !important; 
 }
 
 .glow-inner, .modal-content {
@@ -192,6 +207,7 @@ body {
     font-weight: 700;
     color: var(--text-main);
     background: transparent;
+    white-space: nowrap; 
     transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -216,7 +232,6 @@ body {
     color: #ffffff !important;
 }
 
-/* Botão Salvar com Bordas e Fundo Padrão Bem Visíveis */
 .btn-success-custom {
     color: #1b8a36;
     background: rgba(255, 255, 255, 0.88) !important;
@@ -230,7 +245,6 @@ body {
     box-shadow: none !important;
 }
 
-/* Área Principal e Lista */
 .main-content {
     flex: 1;
     position: relative;
@@ -257,7 +271,6 @@ body {
     inset: 0;
 }
 
-/* Painel Inline (Sem Borda de Card) */
 .inline-create-container {
     position: absolute;
     inset: 0;
@@ -304,13 +317,6 @@ body {
     outline: none;
     box-shadow: inset 0 2px 4px rgba(0,0,0,0.03); 
     transition: all 0.3s ease;
-}
-
-.inline-create-inner textarea {
-    resize: none;
-    min-height: 110px;
-    max-height: 275px; /* Limite de aproximadamente 10 linhas */
-    overflow-y: auto;  /* Ativa a barra de rolagem ao passar do limite */
 }
 
 .inline-create-inner input:focus, 
@@ -393,7 +399,7 @@ body {
     display: flex; 
     align-items: center; 
     justify-content: center;
-    border: none; 
+    border: 2px solid rgba(0, 0, 0, 0.12); 
     background: transparent; 
     color: var(--text-muted); 
     cursor: pointer;
@@ -405,10 +411,11 @@ body {
     cursor: not-allowed;
 }
 
-.glow-wrapper:hover .circle-btn,
-.glow-wrapper:hover .arrow-btn:not(:disabled) { 
+.circle-wrapper:hover .circle-btn,
+.circle-wrapper:hover .arrow-btn:not(:disabled) { 
     background: var(--glow-color); 
     color: white !important; 
+    border-color: transparent; 
 }
 
 .modal {

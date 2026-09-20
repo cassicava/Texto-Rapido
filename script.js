@@ -49,7 +49,6 @@ function setupAutoCapitalize(elementId) {
 setupAutoCapitalize('inline-input-title');
 setupAutoCapitalize('inline-input-text');
 
-// Auto-expand do Textarea até ~10 linhas com scrollbar
 function autoResizeTextarea() {
     inlineInputText.style.height = 'auto';
     inlineInputText.style.height = inlineInputText.scrollHeight + 'px';
@@ -181,23 +180,37 @@ function triggerCopyFeedback(color) {
 
 /* --- Controle do Modo de Edição da Lista --- */
 btnEdit.parentElement.addEventListener('click', () => {
+    if (currentMode === 'edit') {
+        // Clicou em "Cancelar Edição"
+        closeInlineForm();
+        return;
+    }
+
     if (currentMode !== 'list') return;
+
+    // Entra ou sai do modo de edição da lista
     isEditMode = !isEditMode;
     btnEdit.innerText = isEditMode ? 'Concluído' : 'Editar';
     
     wrapEdit.style.setProperty('--glow-color', isEditMode ? '#34C759' : '#AF52DE');
-    wrapCreate.classList.toggle('hide-anim', isEditMode);
+    
+    // Oculta/Exibe o botão de Criar com animação
+    if (isEditMode) {
+        wrapCreate.classList.add('hide-anim');
+    } else {
+        wrapCreate.classList.remove('hide-anim');
+    }
     
     render();
 });
 
-/* --- Controle do Botão Superior (Criar / Fechar / Cancelar Edição) --- */
+/* --- Controle do Botão Superior Criar/Fechar --- */
 btnCreate.parentElement.addEventListener('click', () => {
     if (isEditMode) return;
 
     if (currentMode === 'list') {
         openCreateMode();
-    } else {
+    } else if (currentMode === 'create') {
         closeInlineForm();
     }
 });
@@ -206,13 +219,15 @@ function openCreateMode() {
     currentMode = 'create';
     editingId = null;
     isEditMode = false;
-    btnEdit.innerText = 'Editar';
     
+    // Oculta o botão Editar
+    wrapEdit.classList.add('hide-anim');
+    
+    // Transforma o botão Criar em Fechar
     btnCreateText.innerText = 'Fechar';
     btnCreate.querySelector('svg').style.transform = 'rotate(45deg)';
     wrapCreate.style.setProperty('--glow-color', '#FF3B30');
     wrapCreate.classList.remove('hide-anim');
-    wrapEdit.classList.add('hide-anim');
     
     document.getElementById('inline-form-title').innerText = 'Novo Texto';
     document.getElementById('inline-input-title').value = '';
@@ -232,14 +247,15 @@ window.openEdit = function(id) {
 
     currentMode = 'edit';
     editingId = id;
-    isEditMode = false;
-    btnEdit.innerText = 'Editar';
+    isEditMode = false; // Sai do modo de edição de lista para edição única
 
-    btnCreateText.innerText = 'Cancelar Edição';
-    btnCreate.querySelector('svg').style.transform = 'rotate(45deg)';
-    wrapCreate.style.setProperty('--glow-color', '#FF3B30'); // Efeito vermelho ao cancelar edição
-    wrapCreate.classList.remove('hide-anim');
-    wrapEdit.classList.add('hide-anim');
+    // O botão Concluído se transforma em Cancelar Edição
+    btnEdit.innerText = 'Cancelar Edição';
+    wrapEdit.style.setProperty('--glow-color', '#FF3B30'); // Efeito vermelho ao cancelar
+    wrapEdit.classList.remove('hide-anim'); // Garante que esteja visível
+    
+    // Mantém o botão Criar oculto
+    wrapCreate.classList.add('hide-anim');
 
     document.getElementById('inline-form-title').innerText = 'Editar Texto';
     document.getElementById('inline-input-title').value = item.title;
@@ -257,13 +273,17 @@ function closeInlineForm() {
     currentMode = 'list';
     editingId = null;
     isEditMode = false;
-    btnEdit.innerText = 'Editar';
     
+    // Restaura o botão Editar
+    btnEdit.innerText = 'Editar';
+    wrapEdit.style.setProperty('--glow-color', '#AF52DE');
+    wrapEdit.classList.remove('hide-anim');
+    
+    // Restaura o botão Criar
     btnCreateText.innerText = 'Criar';
     btnCreate.querySelector('svg').style.transform = 'rotate(0deg)';
     wrapCreate.style.setProperty('--glow-color', '#007AFF');
     wrapCreate.classList.remove('hide-anim');
-    wrapEdit.classList.remove('hide-anim');
 
     inlineCreateContainer.classList.remove('active');
     cardList.classList.remove('hidden');
