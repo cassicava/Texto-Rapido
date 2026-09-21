@@ -5,15 +5,17 @@ let texts = JSON.parse(localStorage.getItem('ubs-historico')) || [
 ];
 
 let isEditMode = false;
-let currentMode = 'list'; // 'list' | 'create' | 'edit'
+let currentMode = 'list'; 
 let editingId = null;
 let selectedColor = '#007AFF';
 let deleteTargetId = null;
+let activeFilter = null;
 
 const cardList = document.getElementById('card-list');
 const inlineCreateContainer = document.getElementById('inline-create-container');
 const confirmModal = document.getElementById('confirm-modal');
 const screenFlash = document.getElementById('screen-flash');
+const filterBar = document.getElementById('filter-bar');
 
 const wrapCreate = document.getElementById('wrap-create');
 const wrapEdit = document.getElementById('wrap-edit');
@@ -56,9 +58,54 @@ function autoResizeTextarea() {
 
 inlineInputText.addEventListener('input', autoResizeTextarea);
 
+/* --- Barra de Filtros --- */
+function renderFilterBar() {
+    if (!filterBar) return;
+    
+    // Oculta a barra de filtros se estiver no modo de edição (lista)
+    if (isEditMode) {
+        filterBar.classList.add('hidden');
+        return;
+    } else {
+        filterBar.classList.remove('hidden');
+    }
+    
+    const uniqueColors = [...new Set(texts.map(t => t.color))];
+    
+    if (uniqueColors.length === 0) {
+        filterBar.innerHTML = '';
+        filterBar.style.display = 'none';
+        return;
+    }
+
+    filterBar.style.display = 'flex';
+
+    let html = `
+        <div class="filter-btn filter-all ${activeFilter === null ? 'selected' : ''}" style="--filter-color: #8E8E93;" onclick="setFilter(null)" title="Mostrar Todos">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
+        </div>
+    `;
+
+    uniqueColors.forEach(color => {
+        const isActive = activeFilter === color ? 'selected' : '';
+        html += `<div class="filter-btn ${isActive}" style="background-color: ${color}; --filter-color: ${color};" onclick="setFilter('${color}')" title="Filtrar por esta cor"></div>`;
+    });
+
+    filterBar.innerHTML = html;
+}
+
+window.setFilter = function(color) {
+    activeFilter = color;
+    render();
+};
+
 function render(skipEntranceAnimation = false) {
     cardList.innerHTML = '';
-    texts.forEach((item, index) => {
+    renderFilterBar();
+
+    const filteredTexts = activeFilter ? texts.filter(t => t.color === activeFilter) : texts;
+
+    filteredTexts.forEach((item, index) => {
         const wrapper = document.createElement('div');
         wrapper.className = 'glow-wrapper card-wrapper';
         wrapper.style.setProperty('--glow-color', item.color);
@@ -86,6 +133,9 @@ function render(skipEntranceAnimation = false) {
                 navigator.clipboard.writeText(item.text).then(() => triggerCopyFeedback(item.color));
             });
         } else {
+            const realIndex = texts.findIndex(t => t.id === item.id);
+            const disableReorder = activeFilter !== null;
+
             inner.innerHTML = `
                 <div class="card-title">${item.title}</div>
                 <div class="card-text">${item.text}</div>
@@ -107,12 +157,12 @@ function render(skipEntranceAnimation = false) {
                     
                     <div class="reorder-actions">
                         <div class="glow-wrapper circle-wrapper" style="--glow-color: #007AFF">
-                            <button class="glow-inner arrow-btn" onclick="moveUp(${item.id})" ${index === 0 ? 'disabled' : ''} title="Mover para cima">
+                            <button class="glow-inner arrow-btn" onclick="moveUp(${item.id})" ${disableReorder || realIndex === 0 ? 'disabled' : ''} title="Mover para cima">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" width="20" height="20"><path d="M18 15l-6-6-6 6"/></svg>
                             </button>
                         </div>
                         <div class="glow-wrapper circle-wrapper" style="--glow-color: #007AFF">
-                            <button class="glow-inner arrow-btn" onclick="moveDown(${item.id})" ${index === texts.length - 1 ? 'disabled' : ''} title="Mover para baixo">
+                            <button class="glow-inner arrow-btn" onclick="moveDown(${item.id})" ${disableReorder || realIndex === texts.length - 1 ? 'disabled' : ''} title="Mover para baixo">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" width="20" height="20"><path d="M6 9l6 6 6-6"/></svg>
                             </button>
                         </div>
@@ -181,20 +231,17 @@ function triggerCopyFeedback(color) {
 /* --- Controle do Modo de Edição da Lista --- */
 btnEdit.parentElement.addEventListener('click', () => {
     if (currentMode === 'edit') {
-        // Clicou em "Cancelar Edição"
         closeInlineForm();
         return;
     }
 
     if (currentMode !== 'list') return;
 
-    // Entra ou sai do modo de edição da lista
     isEditMode = !isEditMode;
     btnEdit.innerText = isEditMode ? 'Concluído' : 'Editar';
     
     wrapEdit.style.setProperty('--glow-color', isEditMode ? '#34C759' : '#AF52DE');
     
-    // Oculta/Exibe o botão de Criar com animação
     if (isEditMode) {
         wrapCreate.classList.add('hide-anim');
     } else {
@@ -220,10 +267,10 @@ function openCreateMode() {
     editingId = null;
     isEditMode = false;
     
-    // Oculta o botão Editar
+    if (filterBar) filterBar.classList.add('hidden');
+
     wrapEdit.classList.add('hide-anim');
     
-    // Transforma o botão Criar em Fechar
     btnCreateText.innerText = 'Fechar';
     btnCreate.querySelector('svg').style.transform = 'rotate(45deg)';
     wrapCreate.style.setProperty('--glow-color', '#FF3B30');
@@ -247,14 +294,14 @@ window.openEdit = function(id) {
 
     currentMode = 'edit';
     editingId = id;
-    isEditMode = false; // Sai do modo de edição de lista para edição única
+    isEditMode = false;
 
-    // O botão Concluído se transforma em Cancelar Edição
+    if (filterBar) filterBar.classList.add('hidden');
+
     btnEdit.innerText = 'Cancelar Edição';
-    wrapEdit.style.setProperty('--glow-color', '#FF3B30'); // Efeito vermelho ao cancelar
-    wrapEdit.classList.remove('hide-anim'); // Garante que esteja visível
+    wrapEdit.style.setProperty('--glow-color', '#FF3B30');
+    wrapEdit.classList.remove('hide-anim');
     
-    // Mantém o botão Criar oculto
     wrapCreate.classList.add('hide-anim');
 
     document.getElementById('inline-form-title').innerText = 'Editar Texto';
@@ -274,12 +321,12 @@ function closeInlineForm() {
     editingId = null;
     isEditMode = false;
     
-    // Restaura o botão Editar
+    if (filterBar) filterBar.classList.remove('hidden');
+
     btnEdit.innerText = 'Editar';
     wrapEdit.style.setProperty('--glow-color', '#AF52DE');
     wrapEdit.classList.remove('hide-anim');
     
-    // Restaura o botão Criar
     btnCreateText.innerText = 'Criar';
     btnCreate.querySelector('svg').style.transform = 'rotate(0deg)';
     wrapCreate.style.setProperty('--glow-color', '#007AFF');
@@ -303,6 +350,11 @@ window.closeConfirmModal = function() {
 window.executeDelete = function() {
     if (deleteTargetId !== null) {
         texts = texts.filter(t => t.id !== deleteTargetId);
+        
+        if (activeFilter && !texts.some(t => t.color === activeFilter)) {
+            activeFilter = null;
+        }
+
         saveTexts(); 
         render();
         closeConfirmModal();
@@ -344,6 +396,68 @@ function selectInlineColor(colorHex) {
 
 document.querySelectorAll('#inline-create-container .color-swatch').forEach(swatch => {
     swatch.addEventListener('click', (e) => selectInlineColor(e.target.dataset.color));
+});
+
+/* --- Lógica da Boas-vindas Dinâmica --- */
+window.addEventListener('DOMContentLoaded', () => {
+    const splash = document.getElementById('welcome-splash');
+    const textEl = document.getElementById('welcome-text');
+    const emojiEl = document.getElementById('welcome-emoji');
+    
+    if (!splash || !textEl || !emojiEl) return;
+
+    const catEmojis = ['🐱', '😸', '😺', '😻', '🐾', '🐈‍⬛', '😽', '😹'];
+    
+    const greetings = {
+        morning: {
+            title: "Bom dia!",
+            phrases: [
+                "Já serviu o sachê de hoje?",
+                "Hora de miar na porta até abrir!",
+                "Modo ronronar e espreguiçada ativado.",
+                "De olho nos passarinhos pela janela..."
+            ]
+        },
+        afternoon: {
+            title: "Boa tarde!",
+            phrases: [
+                "Hora do cochilo perfeito no raio de sol.",
+                "Cuidado para não derrubar o copo da mesa!",
+                "Procurando uma caixa de papelão nova...",
+                "Amassando pãozinho perto do teclado."
+            ]
+        },
+        night: {
+            title: "Boa noite!",
+            phrases: [
+                "Preparando a corrida louca (zoomies) das 3h da manhã!",
+                "Hora de dominar a cama e não deixar espaço.",
+                "Modo caça noturna ativado na penumbra.",
+                "Silêncio no recinto... hora de recolher as patas."
+            ]
+        }
+    };
+
+    const hour = new Date().getHours();
+    let period = 'night';
+
+    if (hour >= 5 && hour < 12) {
+        period = 'morning';
+    } else if (hour >= 12 && hour < 18) {
+        period = 'afternoon';
+    }
+
+    const randomEmoji = catEmojis[Math.floor(Math.random() * catEmojis.length)];
+    const periodData = greetings[period];
+    const randomPhrase = periodData.phrases[Math.floor(Math.random() * periodData.phrases.length)];
+
+    emojiEl.innerText = randomEmoji;
+    textEl.innerHTML = `${periodData.title}<br><span class="welcome-subtitle">${randomPhrase}</span>`;
+
+    setTimeout(() => {
+        splash.classList.add('fade-out');
+        setTimeout(() => splash.remove(), 500);
+    }, 1400);
 });
 
 render();

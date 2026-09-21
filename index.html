@@ -7,6 +7,14 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <!-- Tela de Boas-vindas -->
+    <div id="welcome-splash" class="welcome-splash">
+        <div class="welcome-content">
+            <span id="welcome-emoji" class="welcome-emoji">🐱</span>
+            <h1 id="welcome-text"></h1>
+        </div>
+    </div>
+
     <div id="screen-flash" class="screen-flash"></div>
 
     <div class="app-container" id="app-container">
@@ -25,6 +33,9 @@
         </header>
         
         <main id="main-content" class="main-content">
+            <!-- Barra de Filtro Dinâmica -->
+            <div id="filter-bar" class="filter-bar"></div>
+
             <!-- Lista de Cards -->
             <div id="card-list" class="card-list"></div>
 
@@ -37,13 +48,13 @@
                     <textarea id="inline-input-text" placeholder="Texto" autocapitalize="sentences"></textarea>
                     
                     <div class="color-picker">
-                        <div class="color-swatch selected" data-color="#007AFF" style="background: #007AFF" title="Azul"></div>
-                        <div class="color-swatch" data-color="#FF99C8" style="background: #FF99C8" title="Rosa Claro"></div>
-                        <div class="color-swatch" data-color="#FFD166" style="background: #FFD166" title="Amarelo Claro"></div>
-                        <div class="color-swatch" data-color="#5AC8FA" style="background: #5AC8FA" title="Ciano Claro"></div>
-                        <div class="color-swatch" data-color="#34C759" style="background: #34C759" title="Verde"></div>
-                        <div class="color-swatch" data-color="#AF52DE" style="background: #AF52DE" title="Roxo"></div>
-                        <div class="color-swatch" data-color="#FF3B30" style="background: #FF3B30" title="Vermelho"></div>
+                        <div class="color-swatch selected" data-color="#007AFF" style="background: #007AFF; --swatch-color: #007AFF;" title="Azul"></div>
+                        <div class="color-swatch" data-color="#FF99C8" style="background: #FF99C8; --swatch-color: #FF99C8;" title="Rosa Claro"></div>
+                        <div class="color-swatch" data-color="#FFD166" style="background: #FFD166; --swatch-color: #FFD166;" title="Amarelo Claro"></div>
+                        <div class="color-swatch" data-color="#5AC8FA" style="background: #5AC8FA; --swatch-color: #5AC8FA;" title="Ciano Claro"></div>
+                        <div class="color-swatch" data-color="#34C759" style="background: #34C759; --swatch-color: #34C759;" title="Verde"></div>
+                        <div class="color-swatch" data-color="#AF52DE" style="background: #AF52DE; --swatch-color: #AF52DE;" title="Roxo"></div>
+                        <div class="color-swatch" data-color="#FF3B30" style="background: #FF3B30; --swatch-color: #FF3B30;" title="Vermelho"></div>
                     </div>
 
                     <div class="glow-wrapper" style="--glow-color: #34C759; width: 100%;">
@@ -61,7 +72,7 @@
             <h2 style="color: #FF3B30;">Excluir Modelo?</h2>
             <p>Esta ação não poderá ser desfeita. O texto será apagado permanentemente.</p>
             <div class="modal-actions confirm-actions">
-                <div class="glow-wrapper" style="--glow-color: #86868b; width: 100%;">
+                <div class="glow-wrapper" style="--glow-color: #8e8e93; width: 100%;">
                     <button class="glow-inner mac-btn" onclick="closeConfirmModal()">Cancelar</button>
                 </div>
                 <div class="glow-wrapper" style="--glow-color: #FF3B30; width: 100%;">
