@@ -20,6 +20,12 @@
     <div class="app-container" id="app-container">
         <header class="app-header">
             <div class="header-actions">
+                <div class="glow-wrapper hide-anim" id="wrap-back" style="--glow-color: #5AC8FA;">
+                    <button id="btn-back" class="glow-inner mac-btn">
+                        <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                        <span>Voltar</span>
+                    </button>
+                </div>
                 <div class="glow-wrapper" id="wrap-create" style="--glow-color: #007AFF;">
                     <button id="btn-create" class="glow-inner mac-btn">
                         <svg class="create-icon" viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
@@ -33,13 +39,10 @@
         </header>
         
         <main id="main-content" class="main-content">
-            <!-- Barra de Filtro Dinâmica -->
             <div id="filter-bar" class="filter-bar"></div>
-
-            <!-- Lista de Cards -->
             <div id="card-list" class="card-list"></div>
 
-            <!-- Área Inline (Utilizada tanto para Criar quanto para Editar) -->
+            <!-- Área de Criação/Edição -->
             <div id="inline-create-container" class="inline-create-container">
                 <div class="inline-create-inner">
                     <h2 id="inline-form-title">Novo Texto</h2>
@@ -48,13 +51,13 @@
                     <textarea id="inline-input-text" placeholder="Texto" autocapitalize="sentences"></textarea>
                     
                     <div class="color-picker">
-                        <div class="color-swatch selected" data-color="#007AFF" style="background: #007AFF; --swatch-color: #007AFF;" title="Azul"></div>
-                        <div class="color-swatch" data-color="#FF99C8" style="background: #FF99C8; --swatch-color: #FF99C8;" title="Rosa Claro"></div>
-                        <div class="color-swatch" data-color="#FFD166" style="background: #FFD166; --swatch-color: #FFD166;" title="Amarelo Claro"></div>
-                        <div class="color-swatch" data-color="#5AC8FA" style="background: #5AC8FA; --swatch-color: #5AC8FA;" title="Ciano Claro"></div>
-                        <div class="color-swatch" data-color="#34C759" style="background: #34C759; --swatch-color: #34C759;" title="Verde"></div>
-                        <div class="color-swatch" data-color="#AF52DE" style="background: #AF52DE; --swatch-color: #AF52DE;" title="Roxo"></div>
-                        <div class="color-swatch" data-color="#FF3B30" style="background: #FF3B30; --swatch-color: #FF3B30;" title="Vermelho"></div>
+                        <div class="color-swatch selected" data-color="#007AFF" style="background: #007AFF; --swatch-color: #007AFF;"></div>
+                        <div class="color-swatch" data-color="#FF99C8" style="background: #FF99C8; --swatch-color: #FF99C8;"></div>
+                        <div class="color-swatch" data-color="#FFD166" style="background: #FFD166; --swatch-color: #FFD166;"></div>
+                        <div class="color-swatch" data-color="#5AC8FA" style="background: #5AC8FA; --swatch-color: #5AC8FA;"></div>
+                        <div class="color-swatch" data-color="#34C759" style="background: #34C759; --swatch-color: #34C759;"></div>
+                        <div class="color-swatch" data-color="#AF52DE" style="background: #AF52DE; --swatch-color: #AF52DE;"></div>
+                        <div class="color-swatch" data-color="#FF3B30" style="background: #FF3B30; --swatch-color: #FF3B30;"></div>
                     </div>
 
                     <div class="glow-wrapper" style="--glow-color: #34C759; width: 100%;">
@@ -62,10 +65,74 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Área de Configurações -->
+            <div id="settings-container" class="settings-container">
+                <div class="settings-inner">
+                    <!-- Backup -->
+                    <div class="settings-card glow-inner">
+                        <h3>Backup dos Textos</h3>
+                        <div class="settings-actions">
+                            <div class="glow-wrapper" style="--glow-color: #007AFF;">
+                                <button class="glow-inner mac-btn" onclick="exportBackup()">Exportar</button>
+                            </div>
+                            <div class="glow-wrapper" style="--glow-color: #AF52DE;">
+                                <label class="glow-inner mac-btn" style="cursor: pointer; display: flex; align-items: center; justify-content: center;">
+                                    Importar
+                                    <input type="file" id="import-file" accept=".json" style="display: none;" onchange="importBackup(event)">
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Doação Gatinhos -->
+                    <div class="settings-card glow-inner pix-card">
+                        <h3>Gatinhos do Posto 🐾</h3>
+                        <p>Ajude a manter o sachê da Menininha, do Pitico e do Peludão em dia!</p>
+                        
+                        <div class="carousel-container">
+                            <div class="carousel-inner" id="carousel-inner">
+                                <!-- ======================================================== -->
+                                <!-- 📸 SUBSTITUA OS LINKS DAS IMAGENS AQUI 📸                 -->
+                                <!-- Cole a URL ou o caminho da sua imagem no atributo src="" -->
+                                <!-- ======================================================== -->
+                                <img src="https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?auto=format&fit=crop&w=400&q=80" alt="Menininha" class="carousel-img active">
+                                
+                                <img src="https://images.unsplash.com/photo-1573865526739-10659fec78a5?auto=format&fit=crop&w=400&q=80" alt="Pitico" class="carousel-img">
+                                
+                                <img src="https://images.unsplash.com/photo-1533738363-b7f9aef128ce?auto=format&fit=crop&w=400&q=80" alt="Peludão" class="carousel-img">
+                                <!-- ======================================================== -->
+                            </div>
+                            <!-- Os botões de setinhas foram removidos. O carrossel rodará sozinho. -->
+                            <div class="carousel-caption" id="carousel-caption">Menininha na fiscalização</div>
+                        </div>
+
+                        <div class="pix-area">
+                            <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=sua-chave-pix-aqui" alt="QR Code Pix" class="pix-qrcode">
+                            <input type="text" value="sua-chave-pix-aqui" readonly id="pix-key-input">
+                            <div class="glow-wrapper" style="--glow-color: #34C759; width: 100%;">
+                                <button class="glow-inner mac-btn btn-success-custom" style="width: 100%; justify-content: center;" onclick="copyPix()">Copiar Chave Pix</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </main>
+
+        <!-- Footer (Adicionado o ID 'app-footer' para o JS conseguir escondê-lo) -->
+        <footer id="app-footer" class="app-footer">
+            <div class="footer-message-container" onclick="openSettings()">
+                <span id="footer-message-text" class="footer-message-text">🐾 Carregando miados...</span>
+            </div>
+            <div class="glow-wrapper" style="--glow-color: #8E8E93;">
+                <button class="glow-inner mac-btn gear-btn" onclick="openSettings()" title="Configurações">
+                    <svg viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+                </button>
+            </div>
+        </footer>
     </div>
 
-    <!-- Modal de Confirmação de Exclusão -->
+    <!-- Modal de Confirmação -->
     <div id="confirm-modal" class="modal">
         <div class="modal-backdrop" onclick="closeConfirmModal()"></div>
         <div class="modal-content mac-window confirm-window">

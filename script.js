@@ -13,16 +13,21 @@ let activeFilter = null;
 
 const cardList = document.getElementById('card-list');
 const inlineCreateContainer = document.getElementById('inline-create-container');
+const settingsContainer = document.getElementById('settings-container');
 const confirmModal = document.getElementById('confirm-modal');
 const screenFlash = document.getElementById('screen-flash');
 const filterBar = document.getElementById('filter-bar');
 
 const wrapCreate = document.getElementById('wrap-create');
 const wrapEdit = document.getElementById('wrap-edit');
+const wrapBack = document.getElementById('wrap-back');
 const btnCreate = document.getElementById('btn-create');
 const btnCreateText = document.getElementById('btn-create-text');
 const btnEdit = document.getElementById('btn-edit');
+const btnBack = document.getElementById('btn-back');
 const inlineInputText = document.getElementById('inline-input-text');
+const footerMessageText = document.getElementById('footer-message-text');
+const appFooter = document.getElementById('app-footer'); // Seleciona o footer
 
 function saveTexts() { 
     localStorage.setItem('ubs-historico', JSON.stringify(texts)); 
@@ -36,6 +41,7 @@ function attachGlow(element) {
     });
 }
 
+// Isso garante que todos os botões que têm .glow-wrapper ganhem o reflexo!
 document.querySelectorAll('.glow-wrapper').forEach(attachGlow);
 
 function setupAutoCapitalize(elementId) {
@@ -62,7 +68,6 @@ inlineInputText.addEventListener('input', autoResizeTextarea);
 function renderFilterBar() {
     if (!filterBar) return;
     
-    // Oculta a barra de filtros se estiver no modo de edição (lista)
     if (isEditMode) {
         filterBar.classList.add('hidden');
         return;
@@ -95,8 +100,17 @@ function renderFilterBar() {
 }
 
 window.setFilter = function(color) {
+    if (activeFilter === color) return;
     activeFilter = color;
-    render();
+    
+    cardList.style.opacity = '0';
+    cardList.style.transform = 'translateY(15px)';
+    
+    setTimeout(() => {
+        render();
+        cardList.style.opacity = '1';
+        cardList.style.transform = 'translateY(0)';
+    }, 250);
 };
 
 function render(skipEntranceAnimation = false) {
@@ -228,18 +242,16 @@ function triggerCopyFeedback(color) {
     setTimeout(() => screenFlash.classList.remove('active'), 250);
 }
 
-/* --- Controle do Modo de Edição da Lista --- */
+/* --- Modos Superiores --- */
 btnEdit.parentElement.addEventListener('click', () => {
     if (currentMode === 'edit') {
         closeInlineForm();
         return;
     }
-
     if (currentMode !== 'list') return;
 
     isEditMode = !isEditMode;
     btnEdit.innerText = isEditMode ? 'Concluído' : 'Editar';
-    
     wrapEdit.style.setProperty('--glow-color', isEditMode ? '#34C759' : '#AF52DE');
     
     if (isEditMode) {
@@ -247,18 +259,21 @@ btnEdit.parentElement.addEventListener('click', () => {
     } else {
         wrapCreate.classList.remove('hide-anim');
     }
-    
     render();
 });
 
-/* --- Controle do Botão Superior Criar/Fechar --- */
 btnCreate.parentElement.addEventListener('click', () => {
     if (isEditMode) return;
-
     if (currentMode === 'list') {
         openCreateMode();
     } else if (currentMode === 'create') {
         closeInlineForm();
+    }
+});
+
+btnBack.parentElement.addEventListener('click', () => {
+    if (currentMode === 'settings') {
+        closeSettings();
     }
 });
 
@@ -268,7 +283,6 @@ function openCreateMode() {
     isEditMode = false;
     
     if (filterBar) filterBar.classList.add('hidden');
-
     wrapEdit.classList.add('hide-anim');
     
     btnCreateText.innerText = 'Fechar';
@@ -301,7 +315,6 @@ window.openEdit = function(id) {
     btnEdit.innerText = 'Cancelar Edição';
     wrapEdit.style.setProperty('--glow-color', '#FF3B30');
     wrapEdit.classList.remove('hide-anim');
-    
     wrapCreate.classList.add('hide-anim');
 
     document.getElementById('inline-form-title').innerText = 'Editar Texto';
@@ -337,6 +350,7 @@ function closeInlineForm() {
     render();
 }
 
+/* --- Exclusão com Fade Out --- */
 window.confirmDelete = function(id) {
     deleteTargetId = id;
     confirmModal.classList.add('active');
@@ -349,19 +363,27 @@ window.closeConfirmModal = function() {
 
 window.executeDelete = function() {
     if (deleteTargetId !== null) {
-        texts = texts.filter(t => t.id !== deleteTargetId);
+        const targetCard = document.querySelector(`.card-wrapper[data-id="${deleteTargetId}"]`);
         
-        if (activeFilter && !texts.some(t => t.color === activeFilter)) {
-            activeFilter = null;
+        if (targetCard) {
+            targetCard.classList.add('fade-out-anim');
+            setTimeout(() => {
+                texts = texts.filter(t => t.id !== deleteTargetId);
+                if (activeFilter && !texts.some(t => t.color === activeFilter)) activeFilter = null;
+                saveTexts(); 
+                render(true); 
+                closeConfirmModal();
+            }, 300);
+        } else {
+            texts = texts.filter(t => t.id !== deleteTargetId);
+            saveTexts(); 
+            render(true);
+            closeConfirmModal();
         }
-
-        saveTexts(); 
-        render();
-        closeConfirmModal();
     }
 }
 
-/* Salvar do Painel Inline (Criação ou Edição) */
+/* --- Salvar Criação/Edição --- */
 document.getElementById('inline-btn-save').parentElement.addEventListener('click', () => {
     let title = document.getElementById('inline-input-title').value.trim();
     let text = inlineInputText.value.trim();
@@ -380,7 +402,6 @@ document.getElementById('inline-btn-save').parentElement.addEventListener('click
                 item.color = selectedColor;
             }
         }
-
         saveTexts(); 
         render(); 
         closeInlineForm();
@@ -405,47 +426,18 @@ window.addEventListener('DOMContentLoaded', () => {
     const emojiEl = document.getElementById('welcome-emoji');
     
     if (!splash || !textEl || !emojiEl) return;
-
     const catEmojis = ['🐱', '😸', '😺', '😻', '🐾', '🐈‍⬛', '😽', '😹'];
     
     const greetings = {
-        morning: {
-            title: "Bom dia!",
-            phrases: [
-                "Já serviu o sachê de hoje?",
-                "Hora de miar na porta até abrir!",
-                "Modo ronronar e espreguiçada ativado.",
-                "De olho nos passarinhos pela janela..."
-            ]
-        },
-        afternoon: {
-            title: "Boa tarde!",
-            phrases: [
-                "Hora do cochilo perfeito no raio de sol.",
-                "Cuidado para não derrubar o copo da mesa!",
-                "Procurando uma caixa de papelão nova...",
-                "Amassando pãozinho perto do teclado."
-            ]
-        },
-        night: {
-            title: "Boa noite!",
-            phrases: [
-                "Preparando a corrida louca (zoomies) das 3h da manhã!",
-                "Hora de dominar a cama e não deixar espaço.",
-                "Modo caça noturna ativado na penumbra.",
-                "Silêncio no recinto... hora de recolher as patas."
-            ]
-        }
+        morning: { title: "Bom dia!", phrases: ["Já serviu o sachê de hoje?", "Hora de miar na porta até abrir!"] },
+        afternoon: { title: "Boa tarde!", phrases: ["Hora do cochilo perfeito.", "Amassando pãozinho perto do teclado."] },
+        night: { title: "Boa noite!", phrases: ["Preparando a corrida louca (zoomies)!", "Silêncio no recinto..."] }
     };
 
     const hour = new Date().getHours();
     let period = 'night';
-
-    if (hour >= 5 && hour < 12) {
-        period = 'morning';
-    } else if (hour >= 12 && hour < 18) {
-        period = 'afternoon';
-    }
+    if (hour >= 5 && hour < 12) period = 'morning';
+    else if (hour >= 12 && hour < 18) period = 'afternoon';
 
     const randomEmoji = catEmojis[Math.floor(Math.random() * catEmojis.length)];
     const periodData = greetings[period];
@@ -459,5 +451,127 @@ window.addEventListener('DOMContentLoaded', () => {
         setTimeout(() => splash.remove(), 500);
     }, 1400);
 });
+
+/* =========================================
+   FUNÇÕES NOVAS: CONFIGURAÇÕES E GATINHOS
+========================================= */
+
+window.openSettings = function() {
+    if (currentMode === 'settings') return;
+    currentMode = 'settings';
+    isEditMode = false;
+
+    wrapCreate.classList.add('hide-anim');
+    wrapEdit.classList.add('hide-anim');
+    wrapBack.classList.remove('hide-anim');
+
+    cardList.classList.add('hidden');
+    if (filterBar) filterBar.classList.add('hidden');
+    inlineCreateContainer.classList.remove('active');
+    
+    settingsContainer.classList.add('active');
+    
+    // Ocultar o footer nas configurações
+    if(appFooter) appFooter.classList.add('hidden');
+};
+
+window.closeSettings = function() {
+    currentMode = 'list';
+    
+    wrapBack.classList.add('hide-anim');
+    wrapEdit.classList.remove('hide-anim');
+    wrapCreate.classList.remove('hide-anim');
+    
+    settingsContainer.classList.remove('active');
+    cardList.classList.remove('hidden');
+    if (filterBar) filterBar.classList.remove('hidden');
+    
+    // Mostrar o footer novamente
+    if(appFooter) appFooter.classList.remove('hidden');
+    
+    render();
+};
+
+const catMessages = [
+    "🐾 Menininha mandou avisar: o sachê tá no fim! [Clique aqui]",
+    "😸 Pitico agradece o carinho no plantão!",
+    "🐈‍⬛ Peludão está de olho! Que tal um Pix pra ração?",
+    "🥣 Ajude a manter a tigelinha dos gatos cheia! Clique aqui."
+];
+let msgIndex = 0;
+
+if (footerMessageText) {
+    footerMessageText.innerText = catMessages[msgIndex];
+    
+    footerMessageText.addEventListener('animationiteration', () => {
+        msgIndex = (msgIndex + 1) % catMessages.length;
+        footerMessageText.innerText = catMessages[msgIndex];
+    });
+}
+
+const carouselImgs = document.querySelectorAll('.carousel-img');
+const carouselCaption = document.getElementById('carousel-caption');
+const captions = [
+    "Menininha na fiscalização",
+    "Pitico esperando o sachê",
+    "Peludão de olho no posto"
+];
+let currentSlide = 0;
+
+// Função para avançar o slide (Agora será chamada automaticamente)
+window.nextSlide = function() {
+    if(carouselImgs.length === 0) return;
+    carouselImgs[currentSlide].classList.remove('active');
+    currentSlide = (currentSlide + 1) % carouselImgs.length;
+    carouselImgs[currentSlide].classList.add('active');
+    carouselCaption.innerText = captions[currentSlide];
+};
+
+// Temporizador: Faz o carrossel avançar sozinho a cada 3,5 segundos (3500ms)
+setInterval(window.nextSlide, 3500);
+
+window.exportBackup = function() {
+    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(texts));
+    const downloadAnchorNode = document.createElement('a');
+    downloadAnchorNode.setAttribute("href", dataStr);
+    downloadAnchorNode.setAttribute("download", "historico_ubs_backup.json");
+    document.body.appendChild(downloadAnchorNode);
+    downloadAnchorNode.click();
+    downloadAnchorNode.remove();
+    triggerCopyFeedback('#007AFF');
+};
+
+window.importBackup = function(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        try {
+            const importedTexts = JSON.parse(e.target.result);
+            if (Array.isArray(importedTexts)) {
+                texts = importedTexts;
+                saveTexts();
+                render();
+                triggerCopyFeedback('#34C759');
+                setTimeout(() => alert("Backup importado com sucesso!"), 300);
+            } else {
+                alert("Arquivo inválido. Certifique-se de usar o backup gerado pelo app.");
+            }
+        } catch (err) {
+            alert("Erro ao ler o arquivo.");
+        }
+        event.target.value = '';
+    };
+    reader.readAsText(file);
+};
+
+window.copyPix = function() {
+    const pixInput = document.getElementById('pix-key-input');
+    pixInput.select();
+    navigator.clipboard.writeText(pixInput.value).then(() => {
+        triggerCopyFeedback('#34C759'); 
+    });
+};
 
 render();
