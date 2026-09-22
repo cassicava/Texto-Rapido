@@ -27,7 +27,7 @@ const btnEdit = document.getElementById('btn-edit');
 const btnBack = document.getElementById('btn-back');
 const inlineInputText = document.getElementById('inline-input-text');
 const footerMessageText = document.getElementById('footer-message-text');
-const appFooter = document.getElementById('app-footer'); // Seleciona o footer
+const appFooter = document.getElementById('app-footer');
 
 function saveTexts() { 
     localStorage.setItem('ubs-historico', JSON.stringify(texts)); 
@@ -41,7 +41,6 @@ function attachGlow(element) {
     });
 }
 
-// Isso garante que todos os botões que têm .glow-wrapper ganhem o reflexo!
 document.querySelectorAll('.glow-wrapper').forEach(attachGlow);
 
 function setupAutoCapitalize(elementId) {
@@ -350,7 +349,7 @@ function closeInlineForm() {
     render();
 }
 
-/* --- Exclusão com Fade Out --- */
+/* --- Exclusão --- */
 window.confirmDelete = function(id) {
     deleteTargetId = id;
     confirmModal.classList.add('active');
@@ -419,7 +418,7 @@ document.querySelectorAll('#inline-create-container .color-swatch').forEach(swat
     swatch.addEventListener('click', (e) => selectInlineColor(e.target.dataset.color));
 });
 
-/* --- Lógica da Boas-vindas Dinâmica --- */
+/* --- Boas-vindas Dinâmica --- */
 window.addEventListener('DOMContentLoaded', () => {
     const splash = document.getElementById('welcome-splash');
     const textEl = document.getElementById('welcome-text');
@@ -452,10 +451,7 @@ window.addEventListener('DOMContentLoaded', () => {
     }, 1400);
 });
 
-/* =========================================
-   FUNÇÕES NOVAS: CONFIGURAÇÕES E GATINHOS
-========================================= */
-
+/* --- Configurações --- */
 window.openSettings = function() {
     if (currentMode === 'settings') return;
     currentMode = 'settings';
@@ -471,7 +467,6 @@ window.openSettings = function() {
     
     settingsContainer.classList.add('active');
     
-    // Ocultar o footer nas configurações
     if(appFooter) appFooter.classList.add('hidden');
 };
 
@@ -486,7 +481,6 @@ window.closeSettings = function() {
     cardList.classList.remove('hidden');
     if (filterBar) filterBar.classList.remove('hidden');
     
-    // Mostrar o footer novamente
     if(appFooter) appFooter.classList.remove('hidden');
     
     render();
@@ -518,7 +512,6 @@ const captions = [
 ];
 let currentSlide = 0;
 
-// Função para avançar o slide (Agora será chamada automaticamente)
 window.nextSlide = function() {
     if(carouselImgs.length === 0) return;
     carouselImgs[currentSlide].classList.remove('active');
@@ -527,7 +520,6 @@ window.nextSlide = function() {
     carouselCaption.innerText = captions[currentSlide];
 };
 
-// Temporizador: Faz o carrossel avançar sozinho a cada 3,5 segundos (3500ms)
 setInterval(window.nextSlide, 3500);
 
 window.exportBackup = function() {
