@@ -7,6 +7,19 @@
     <!-- Ícone do Gatinho na aba do navegador -->
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🐱</text></svg>">
     <link rel="stylesheet" href="style.css">
+    <style>
+        /* Efeito de zoom no QR Code */
+        .qr-zoom {
+            transition: transform 5s ease; /* Leva 5 segundos para voltar ao tamanho original */
+            cursor: zoom-in;
+            position: relative;
+            z-index: 10;
+        }
+        .qr-zoom:hover {
+            transform: scale(1.6); /* Aumenta 60% do tamanho */
+            transition: transform 0.3s ease; /* Aumenta rápido ao passar o mouse */
+        }
+    </style>
 </head>
 <body>
     <!-- Tela de Boas-vindas -->
@@ -92,22 +105,39 @@
                         <h3>Gatinhos do Posto 🐾</h3>
                         <p>Ajude a manter o sachê da Menininha, do Pitico e do Peludão em dia!</p>
                         
-                        <div class="carousel-container">
+                       <div class="carousel-container">
                             <div class="carousel-inner" id="carousel-inner">
-                                <img src="https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?auto=format&fit=crop&w=400&q=80" alt="Menininha" class="carousel-img active">
-                                <img src="https://images.unsplash.com/photo-1573865526739-10659fec78a5?auto=format&fit=crop&w=400&q=80" alt="Pitico" class="carousel-img">
-                                <img src="https://images.unsplash.com/photo-1533738363-b7f9aef128ce?auto=format&fit=crop&w=400&q=80" alt="Peludão" class="carousel-img">
+                                <img src="1.jpeg" alt="Menininha e Pitico" class="carousel-img active">
+                                <img src="2.jpeg" alt="Menininha e Peludão" class="carousel-img">
+                                <img src="3.jpeg" alt="Os três juntos" class="carousel-img">
                             </div>
-                            <div class="carousel-caption" id="carousel-caption">Menininha na fiscalização</div>
+                            <div class="carousel-caption" id="carousel-caption">Menininha e Pitico num cochilo bem agarradinhos ❤️</div>
                         </div>
 
-                        <div class="pix-area">
-                            <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=sua-chave-pix-aqui" alt="QR Code Pix" class="pix-qrcode">
-                            <input type="text" value="sua-chave-pix-aqui" readonly id="pix-key-input">
-                            <div class="glow-wrapper" style="--glow-color: #34C759; width: 100%;">
-                                <button class="glow-inner mac-btn btn-success-custom" style="width: 100%; justify-content: center;" onclick="copyPix()">Copiar Chave Pix</button>
+                        <!-- LADO A LADO: QR CODE E DADOS -->
+                        <div style="display: flex !important; flex-direction: row !important; align-items: center !important; gap: 15px !important; margin-top: 20px !important; width: 100% !important;">
+                            
+                            <!-- Esquerda: QR Code (Sem borda, com zoom) -->
+                            <div style="flex-shrink: 0 !important; display: flex !important; justify-content: center !important; align-items: center !important;">
+                                <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=00020126440014br.gov.bcb.pix0122cassiano.c@outlook.com5204000053039865802BR5925Cassiano%20Carvalho%20Cavassa6009Sao%20Paulo62230519daqr14858431993772763045462" alt="QR Code Pix" class="qr-zoom" style="width: 130px !important; height: 130px !important; margin: 0 !important; display: block !important;">
+                            </div>
+                            
+                            <!-- Direita: Input e Botão -->
+                            <div style="display: flex !important; flex-direction: column !important; gap: 10px !important; flex-grow: 1 !important; min-width: 0 !important;">
+                                
+                                <input type="text" value="00020126440014br.gov.bcb.pix0122cassiano.c@outlook.com5204000053039865802BR5925Cassiano Carvalho Cavassa6009Sao Paulo62230519daqr14858431993772763045462" readonly id="pix-key-input" style="margin: 0 !important; width: 100% !important; box-sizing: border-box !important; text-overflow: ellipsis !important; overflow: hidden !important; font-size: 12px !important; padding: 10px !important;">
+                                
+                                <div class="glow-wrapper" style="--glow-color: #34C759; width: 100%;">
+                                    <button class="glow-inner mac-btn btn-success-custom" style="width: 100% !important; justify-content: center !important; padding: 10px !important;" onclick="copyPix(); let btn = this; btn.innerText = 'Obrigado❤️'; setTimeout(() => btn.innerText = 'Copiar Chave', 2000);">Copiar Chave</button>
+                                </div>
                             </div>
                         </div>
+
+                        <!-- Nome do recebedor na linha de baixo -->
+                        <div style="text-align: center; margin-top: 15px; font-size: 13px; font-weight: 500; color: #8e8e93; opacity: 0.8;">
+                            Recebedor: Cassiano Carvalho Cavassa
+                        </div>
+
                     </div>
                 </div>
             </div>

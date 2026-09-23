@@ -506,9 +506,9 @@ if (footerMessageText) {
 const carouselImgs = document.querySelectorAll('.carousel-img');
 const carouselCaption = document.getElementById('carousel-caption');
 const captions = [
-    "Menininha na fiscalização",
-    "Pitico esperando o sachê",
-    "Peludão de olho no posto"
+    "Menininha e Pitico num cochilo bem agarradinhos ❤️",
+    "Menininha e Peludão dividindo o almoço",
+    "A gangue do posto toda reunida para a boia!"
 ];
 let currentSlide = 0;
 
