@@ -528,6 +528,7 @@ window.calcularIMC = function() {
         valorEl.innerText = '--';
         classifEl.innerText = 'Informe o peso e a altura';
         classifEl.style.color = 'var(--text-muted)';
+        classifEl.style.backgroundColor = 'transparent';
         marker.classList.remove('active');
         return;
     }
@@ -569,7 +570,10 @@ window.calcularIMC = function() {
     
     valorEl.innerText = imc;
     classifEl.innerText = classif;
-    classifEl.style.color = color;
+    
+    // Transforma em pílula mudando a cor de fundo e garantindo contraste ideal
+    classifEl.style.backgroundColor = color;
+    classifEl.style.color = (color === '#FFD166' || color === '#5AC8FA') ? '#000000' : '#ffffff';
     
     marker.style.left = `${pct}%`;
     marker.style.borderColor = color;
@@ -666,8 +670,8 @@ const images = document.querySelectorAll('.carousel-img');
 const caption = document.getElementById('carousel-caption');
 const captionsText = [
     "Menininha e Pitico num cochilo bem agarradinhos ❤️",
-    "Menininha e Peludão pedindo petiscos 🥺",
-    "Os três reunidos! O postinho é a casa deles 🐾"
+    "Menininha e Peludão dividindo o almoço",
+    "a Gangue dos Gatos"
 ];
 let currentImgIndex = 0;
 
