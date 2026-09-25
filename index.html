@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
@@ -92,16 +92,16 @@
                 <div class="settings-inner inline-create-inner">
                     <h2 style="color: var(--text-main);">Calculadora de IMC</h2>
                     
-                    <!-- Campo Peso com botão de limpar -->
+                    <!-- Campo Peso com botão de limpar (tabindex="-1" evita o Alt+Tab nele) -->
                     <div class="input-clear-wrapper">
                         <input type="text" id="imc-peso" placeholder="Peso (kg) - ex: 80.5" inputmode="decimal" autocomplete="off">
-                        <button class="input-clear-btn" id="btn-clear-peso" onclick="clearInput('imc-peso', 'btn-clear-peso')" title="Limpar">✕</button>
+                        <button class="input-clear-btn" id="btn-clear-peso" tabindex="-1" onclick="clearInput('imc-peso', 'btn-clear-peso')" title="Limpar">✕</button>
                     </div>
 
-                    <!-- Campo Altura com botão de limpar -->
+                    <!-- Campo Altura com botão de limpar (tabindex="-1" evita o Alt+Tab nele) -->
                     <div class="input-clear-wrapper">
                         <input type="text" id="imc-altura" placeholder="Altura (m) - ex: 1.75" inputmode="decimal" autocomplete="off">
-                        <button class="input-clear-btn" id="btn-clear-altura" onclick="clearInput('imc-altura', 'btn-clear-altura')" title="Limpar">✕</button>
+                        <button class="input-clear-btn" id="btn-clear-altura" tabindex="-1" onclick="clearInput('imc-altura', 'btn-clear-altura')" title="Limpar">✕</button>
                     </div>
                     
                     <!-- Resultado do IMC -->
@@ -123,6 +123,9 @@
                             <span>40</span>
                         </div>
                     </div>
+
+                    <!-- Fonte da Informação -->
+                    <div class="imc-fonte">Fonte dos cálculos: Organização Mundial da Saúde (OMS)</div>
                 </div>
             </div>
 
