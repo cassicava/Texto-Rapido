@@ -671,7 +671,7 @@ const caption = document.getElementById('carousel-caption');
 const captionsText = [
     "Menininha e Pitico num cochilo bem agarradinhos ❤️",
     "Menininha e Peludão dividindo o almoço",
-    "a Gangue dos Gatos"
+    "Gangue dos Gatos"
 ];
 let currentImgIndex = 0;
 
