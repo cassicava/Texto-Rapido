@@ -1,4 +1,4 @@
-:root {
+ :root {
     --text-main: #000000;
     --text-muted: #48484a;
     --bg-color: rgba(240, 240, 245, 0.6);
@@ -399,7 +399,7 @@ body {
     justify-content: center;
     text-align: center;
     margin: 5px 0 0 0;
-    min-height: 75px;
+    min-height: 90px;
 }
 
 .imc-valor-text {
@@ -410,12 +410,27 @@ body {
     letter-spacing: -1px;
 }
 
+/* Modificado para virar uma Pílula */
 .imc-classificacao-text {
-    font-size: 1.2rem;
-    font-weight: 600;
+    font-size: 1.1rem;
+    font-weight: 700;
     color: var(--text-muted);
-    margin-top: 6px;
-    transition: color 0.3s ease;
+    margin-top: 12px;
+    padding: 6px 16px;
+    border-radius: 50px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    display: inline-block;
+    background-color: transparent;
+}
+
+/* Fonte do IMC */
+.imc-fonte {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin-top: 25px;
+    font-weight: 500;
+    opacity: 0.8;
+    text-align: center;
 }
 
 /* Barra Horizontal de Progresso do IMC */
