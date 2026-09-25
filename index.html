@@ -10,14 +10,14 @@
     <style>
         /* Efeito de zoom no QR Code */
         .qr-zoom {
-            transition: transform 5s ease; /* Leva 5 segundos para voltar ao tamanho original */
+            transition: transform 5s ease;
             cursor: zoom-in;
             position: relative;
             z-index: 10;
         }
         .qr-zoom:hover {
-            transform: scale(1.6); /* Aumenta 60% do tamanho */
-            transition: transform 0.3s ease; /* Aumenta rápido ao passar o mouse */
+            transform: scale(1.6);
+            transition: transform 0.3s ease;
         }
     </style>
 </head>
@@ -50,6 +50,12 @@
                 <div class="glow-wrapper" id="wrap-edit" style="--glow-color: #AF52DE;">
                     <button id="btn-edit" class="glow-inner mac-btn">Editar</button>
                 </div>
+                <div class="glow-wrapper" id="wrap-imc" style="--glow-color: #FFD166;">
+                    <button id="btn-imc" class="glow-inner mac-btn">
+                        <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2" ry="2"></rect><line x1="8" y1="6" x2="16" y2="6"></line><line x1="16" y1="14" x2="16" y2="14"></line><line x1="12" y1="14" x2="12" y2="14"></line><line x1="8" y1="14" x2="8" y2="14"></line><line x1="16" y1="18" x2="16" y2="18"></line><line x1="12" y1="18" x2="12" y2="18"></line><line x1="8" y1="18" x2="8" y2="18"></line><line x1="16" y1="10" x2="16" y2="10"></line><line x1="12" y1="10" x2="12" y2="10"></line><line x1="8" y1="10" x2="8" y2="10"></line></svg>
+                        <span>IMC</span>
+                    </button>
+                </div>
             </div>
         </header>
         
@@ -77,6 +83,45 @@
 
                     <div class="glow-wrapper" style="--glow-color: #34C759; width: 100%;">
                         <button id="inline-btn-save" class="glow-inner mac-btn large btn-success-custom">Salvar</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Área IMC -->
+            <div id="imc-container" class="settings-container">
+                <div class="settings-inner inline-create-inner">
+                    <h2 style="color: var(--text-main);">Calculadora de IMC</h2>
+                    
+                    <!-- Campo Peso com botão de limpar -->
+                    <div class="input-clear-wrapper">
+                        <input type="text" id="imc-peso" placeholder="Peso (kg) - ex: 80.5" inputmode="decimal" autocomplete="off">
+                        <button class="input-clear-btn" id="btn-clear-peso" onclick="clearInput('imc-peso', 'btn-clear-peso')" title="Limpar">✕</button>
+                    </div>
+
+                    <!-- Campo Altura com botão de limpar -->
+                    <div class="input-clear-wrapper">
+                        <input type="text" id="imc-altura" placeholder="Altura (m) - ex: 1.75" inputmode="decimal" autocomplete="off">
+                        <button class="input-clear-btn" id="btn-clear-altura" onclick="clearInput('imc-altura', 'btn-clear-altura')" title="Limpar">✕</button>
+                    </div>
+                    
+                    <!-- Resultado do IMC -->
+                    <div id="imc-resultado" class="imc-resultado-box">
+                        <div id="imc-valor" class="imc-valor-text">--</div>
+                        <div id="imc-classificacao" class="imc-classificacao-text">Informe o peso e a altura</div>
+                    </div>
+
+                    <!-- Barra Horizontal de Progresso de IMC -->
+                    <div class="imc-bar-wrapper">
+                        <div class="imc-bar-track">
+                            <div id="imc-bar-marker" class="imc-bar-marker"></div>
+                        </div>
+                        <div class="imc-bar-legend">
+                            <span>18.5</span>
+                            <span>25</span>
+                            <span>30</span>
+                            <span>35</span>
+                            <span>40</span>
+                        </div>
                     </div>
                 </div>
             </div>

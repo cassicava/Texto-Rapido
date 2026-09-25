@@ -90,7 +90,7 @@ body {
 
 .header-actions {
     display: flex;
-    gap: 16px;
+    gap: 12px;
     justify-content: center;
     align-items: center;
     width: 100%;
@@ -99,7 +99,8 @@ body {
 
 #wrap-create,
 #wrap-edit,
-#wrap-back {
+#wrap-back,
+#wrap-imc {
     transition: max-width 0.4s cubic-bezier(0.16, 1, 0.3, 1),
         opacity 0.3s ease,
         transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
@@ -113,7 +114,8 @@ body {
 
 #wrap-create.hide-anim,
 #wrap-edit.hide-anim,
-#wrap-back.hide-anim {
+#wrap-back.hide-anim,
+#wrap-imc.hide-anim {
     opacity: 0;
     transform: scale(0.8) translateY(-5px);
     max-width: 0;
@@ -170,7 +172,8 @@ body {
 .header-actions .glow-wrapper:hover::before,
 .settings-actions .glow-wrapper:hover::before,
 .app-footer .glow-wrapper:hover::before,
-.pix-area .glow-wrapper:hover::before {
+.pix-area .glow-wrapper:hover::before,
+.inline-create-inner .glow-wrapper:hover::before {
     opacity: 0.8;
 }
 
@@ -196,7 +199,8 @@ body {
 .header-actions .glow-inner,
 .settings-actions .glow-inner,
 .app-footer .glow-inner,
-.pix-area .glow-inner {
+.pix-area .glow-inner,
+.inline-create-inner .glow-inner {
     border: 2px solid rgba(0, 0, 0, 0.18);
     background: rgba(255, 255, 255, 0.45);
 }
@@ -214,7 +218,7 @@ body {
     border: none;
     cursor: pointer;
     outline: none;
-    padding: 12px 24px;
+    padding: 12px 20px;
     font-size: 1.15rem;
     font-weight: 700;
     color: var(--text-main);
@@ -228,6 +232,13 @@ body {
     color: #ffffff !important;
     border-color: transparent;
     box-shadow: none;
+}
+
+/* Hover específico para botão Amarelo (IMC): Texto e Ícone em Preto */
+#wrap-imc:hover .mac-btn,
+#wrap-imc:hover .mac-btn svg {
+    color: #000000 !important;
+    stroke: #000000 !important;
 }
 
 .mac-btn.large {
@@ -338,6 +349,127 @@ body {
     border-color: rgba(0, 122, 255, 0.5);
     background: rgba(255, 255, 255, 0.95);
     box-shadow: 0 0 0 4px rgba(0, 122, 255, 0.15), inset 0 2px 4px rgba(0, 0, 0, 0.02);
+}
+
+/* Wrapper para Inputs com botão de Limpar (X) */
+.input-clear-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+.input-clear-wrapper input {
+    padding-right: 48px !important;
+}
+
+.input-clear-btn {
+    position: absolute;
+    right: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(142, 142, 147, 0.25);
+    color: var(--text-muted);
+    font-size: 13px;
+    font-weight: bold;
+    cursor: pointer;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    z-index: 5;
+}
+
+.input-clear-btn:hover {
+    background: rgba(142, 142, 147, 0.45);
+    color: #000;
+}
+
+.input-clear-wrapper.has-value .input-clear-btn {
+    display: flex;
+}
+
+/* Área de Resultado do IMC */
+.imc-resultado-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    margin: 5px 0 0 0;
+    min-height: 75px;
+}
+
+.imc-valor-text {
+    font-size: 3.2rem;
+    font-weight: 800;
+    color: var(--text-main);
+    line-height: 1;
+    letter-spacing: -1px;
+}
+
+.imc-classificacao-text {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    margin-top: 6px;
+    transition: color 0.3s ease;
+}
+
+/* Barra Horizontal de Progresso do IMC */
+.imc-bar-wrapper {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.imc-bar-track {
+    position: relative;
+    width: 100%;
+    height: 16px;
+    border-radius: 20px;
+    background: linear-gradient(to right, 
+        #5AC8FA 0%, #5AC8FA 20%, /* Abaixo do peso (<18.5) */
+        #34C759 20%, #34C759 40%, /* Normal (18.5 - 24.9) */
+        #FFD166 40%, #FFD166 60%, /* Sobrepeso (25 - 29.9) */
+        #FF9500 60%, #FF9500 75%, /* Obesidade I (30 - 34.9) */
+        #FF3B30 75%, #FF3B30 90%, /* Obesidade II (35 - 39.9) */
+        #AF52DE 90%, #AF52DE 100% /* Obesidade III (>=40) */
+    );
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.15), 0 2px 6px rgba(0,0,0,0.05);
+}
+
+.imc-bar-marker {
+    position: absolute;
+    top: -5px;
+    left: 0%;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: #ffffff;
+    border: 3.5px solid #000000;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.25);
+    transform: translateX(-50%);
+    transition: left 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s ease;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.imc-bar-marker.active {
+    opacity: 1;
+}
+
+.imc-bar-legend {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    padding: 0 10%;
 }
 
 .card-wrapper {
@@ -658,10 +790,7 @@ body {
     height: 25px;
 }
 
-/* =========================================
-   FOOTER E CONFIGURAÇÕES
-========================================= */
-
+/* FOOTER E CONFIGURAÇÕES */
 .app-footer {
     padding: 10px 30px;
     display: flex;
@@ -721,7 +850,6 @@ body {
     transform: rotate(90deg);
 }
 
-/* Configurações */
 .settings-container {
     position: absolute;
     inset: 0;
@@ -782,7 +910,6 @@ body {
     font-size: 1.05rem;
 }
 
-/* Carrossel de Imagens */
 .carousel-container {
     position: relative;
     border-radius: 18px;
@@ -834,14 +961,6 @@ body {
     gap: 12px;
     margin-top: 10px;
     align-items: center;
-}
-
-.pix-qrcode {
-    width: 150px;
-    height: 150px;
-    border-radius: 12px;
-    border: 2px solid rgba(0, 0, 0, 0.1);
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
 }
 
 #pix-key-input {
