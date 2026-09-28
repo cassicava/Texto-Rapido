@@ -46,19 +46,6 @@ function attachGlow(element) {
 
 document.querySelectorAll('.glow-wrapper').forEach(attachGlow);
 
-function setupAutoCapitalize(elementId) {
-    const el = document.getElementById(elementId);
-    if (!el) return;
-    el.addEventListener('input', () => {
-        if (el.value.length > 0) {
-            el.value = el.value.charAt(0).toUpperCase() + el.value.slice(1);
-        }
-    });
-}
-
-setupAutoCapitalize('inline-input-title');
-setupAutoCapitalize('inline-input-text');
-
 /* Trava de dígitos/casas decimais + Cálculo Automático de IMC */
 function setupInputDigitLimits() {
     const pesoInput = document.getElementById('imc-peso');

@@ -1,4 +1,4 @@
- :root {
+:root {
     --text-main: #000000;
     --text-muted: #48484a;
     --bg-color: rgba(240, 240, 245, 0.6);
@@ -391,7 +391,19 @@ body {
     display: flex;
 }
 
-/* Área de Resultado do IMC */
+/* Área de Resultado e Descrição do IMC */
+.imc-descricao {
+    font-size: 0.95rem;
+    color: var(--text-muted);
+    line-height: 1.4;
+    text-align: center;
+    background: rgba(255, 255, 255, 0.5);
+    padding: 12px 16px;
+    border-radius: 16px;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    margin-bottom: 5px;
+}
+
 .imc-resultado-box {
     display: flex;
     flex-direction: column;

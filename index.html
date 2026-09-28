@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
@@ -68,8 +68,8 @@
                 <div class="inline-create-inner">
                     <h2 id="inline-form-title">Novo Texto</h2>
                     
-                    <input type="text" id="inline-input-title" placeholder="Título" autocomplete="off" autocapitalize="sentences">
-                    <textarea id="inline-input-text" placeholder="Texto" autocapitalize="sentences"></textarea>
+                    <input type="text" id="inline-input-title" placeholder="Título" autocomplete="off" autocapitalize="none">
+                    <textarea id="inline-input-text" placeholder="Texto" autocapitalize="none"></textarea>
                     
                     <div class="color-picker">
                         <div class="color-swatch selected" data-color="#007AFF" style="background: #007AFF; --swatch-color: #007AFF;"></div>
@@ -92,6 +92,12 @@
                 <div class="settings-inner inline-create-inner">
                     <h2 style="color: var(--text-main);">Calculadora de IMC</h2>
                     
+                    <div class="imc-descricao">
+                        Segundo a Organização Mundial da Saúde (OMS), o Índice de Massa Corporal (IMC) é calculado dividindo o <strong>peso (em quilogramas)</strong> pela <strong>altura ao quadrado (em metros)</strong>:
+                        <br><br>
+                        <strong>Fórmula:</strong> IMC = Peso ÷ (Altura × Altura)
+                    </div>
+
                     <!-- Campo Peso com botão de limpar (tabindex="-1" evita o Alt+Tab nele) -->
                     <div class="input-clear-wrapper">
                         <input type="text" id="imc-peso" placeholder="Peso (kg) - ex: 80.5" inputmode="decimal" autocomplete="off">
@@ -126,6 +132,13 @@
 
                     <!-- Fonte da Informação -->
                     <div class="imc-fonte">Fonte dos cálculos: Organização Mundial da Saúde (OMS)</div>
+
+ <div class="imc-descricao">
+                        Segundo a Organização Mundial da Saúde (OMS), o Índice de Massa Corporal (IMC) é calculado dividindo o <strong>peso (em quilogramas)</strong> pela <strong>altura ao quadrado (em metros)</strong>:
+                        <br><br>
+                        <strong>Fórmula:</strong> IMC = Peso ÷ (Altura × Altura)
+                    </div>
+
                 </div>
             </div>
 
