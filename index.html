@@ -92,14 +92,13 @@
                 <div class="settings-inner inline-create-inner">
                     <h2 style="color: var(--text-main);">Calculadora de IMC</h2>
 
-
-                    <!-- Campo Peso com botão de limpar (tabindex="-1" evita o Alt+Tab nele) -->
+                    <!-- Campo Peso com botão de limpar -->
                     <div class="input-clear-wrapper">
                         <input type="text" id="imc-peso" placeholder="Peso (kg) - ex: 80.5" inputmode="decimal" autocomplete="off">
                         <button class="input-clear-btn" id="btn-clear-peso" tabindex="-1" onclick="clearInput('imc-peso', 'btn-clear-peso')" title="Limpar">✕</button>
                     </div>
 
-                    <!-- Campo Altura com botão de limpar (tabindex="-1" evita o Alt+Tab nele) -->
+                    <!-- Campo Altura com botão de limpar -->
                     <div class="input-clear-wrapper">
                         <input type="text" id="imc-altura" placeholder="Altura (m) - ex: 1.75" inputmode="decimal" autocomplete="off">
                         <button class="input-clear-btn" id="btn-clear-altura" tabindex="-1" onclick="clearInput('imc-altura', 'btn-clear-altura')" title="Limpar">✕</button>
@@ -128,12 +127,11 @@
                     <!-- Fonte da Informação -->
                     <div class="imc-fonte">Fonte dos cálculos: Organização Mundial da Saúde (OMS)</div>
 
- <div class="imc-descricao">
+                    <div class="imc-descricao">
                         Segundo a Organização Mundial da Saúde (OMS), o Índice de Massa Corporal (IMC) é calculado dividindo o <strong>peso (em quilogramas)</strong> pela <strong>altura ao quadrado (em metros)</strong>:
                         <br><br>
                         <strong>Fórmula:</strong> IMC = Peso ÷ (Altura × Altura)
                     </div>
-
                 </div>
             </div>
 
@@ -161,7 +159,7 @@
                         <h3>Gatinhos do Posto 🐾</h3>
                         <p>Ajude a manter o sachê da Menininha, do Pitico e do Peludão</p>
                         
-                       <div class="carousel-container">
+                        <div class="carousel-container">
                             <div class="carousel-inner" id="carousel-inner">
                                 <img src="1.jpeg" alt="Menininha e Pitico" class="carousel-img active">
                                 <img src="2.jpeg" alt="Menininha e Peludão" class="carousel-img">
@@ -173,14 +171,13 @@
                         <!-- LADO A LADO: QR CODE E DADOS -->
                         <div style="display: flex !important; flex-direction: row !important; align-items: center !important; gap: 15px !important; margin-top: 20px !important; width: 100% !important;">
                             
-                            <!-- Esquerda: QR Code (Sem borda, com zoom) -->
+                            <!-- Esquerda: QR Code -->
                             <div style="flex-shrink: 0 !important; display: flex !important; justify-content: center !important; align-items: center !important;">
                                 <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=00020126440014br.gov.bcb.pix0122cassiano.c@outlook.com5204000053039865802BR5925Cassiano%20Carvalho%20Cavassa6009Sao%20Paulo62230519daqr14858431993772763045462" alt="QR Code Pix" class="qr-zoom" style="width: 130px !important; height: 130px !important; margin: 0 !important; display: block !important;">
                             </div>
                             
                             <!-- Direita: Input e Botão -->
                             <div style="display: flex !important; flex-direction: column !important; gap: 10px !important; flex-grow: 1 !important; min-width: 0 !important;">
-                                
                                 <input type="text" value="00020126440014br.gov.bcb.pix0122cassiano.c@outlook.com5204000053039865802BR5925Cassiano Carvalho Cavassa6009Sao Paulo62230519daqr14858431993772763045462" readonly id="pix-key-input" style="margin: 0 !important; width: 100% !important; box-sizing: border-box !important; text-overflow: ellipsis !important; overflow: hidden !important; font-size: 12px !important; padding: 10px !important;">
                                 
                                 <div class="glow-wrapper" style="--glow-color: #34C759; width: 100%;">
@@ -189,11 +186,10 @@
                             </div>
                         </div>
 
-                        <!-- Nome do recebedor na linha de baixo -->
+                        <!-- Nome do recebedor -->
                         <div style="text-align: center; margin-top: 15px; font-size: 14px; font-weight: 500; color: #8e8e93; opacity: 0.8;">
                             Recebedor: Cassiano Carvalho Cavassa
                         </div>
-
                     </div>
                 </div>
             </div>

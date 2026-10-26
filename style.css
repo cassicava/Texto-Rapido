@@ -234,7 +234,6 @@ body {
     box-shadow: none;
 }
 
-/* Hover específico para botão Amarelo (IMC): Texto e Ícone em Preto */
 #wrap-imc:hover .mac-btn,
 #wrap-imc:hover .mac-btn svg {
     color: #000000 !important;
@@ -351,7 +350,6 @@ body {
     box-shadow: 0 0 0 4px rgba(0, 122, 255, 0.15), inset 0 2px 4px rgba(0, 0, 0, 0.02);
 }
 
-/* Wrapper para Inputs com botão de Limpar (X) */
 .input-clear-wrapper {
     position: relative;
     width: 100%;
@@ -391,7 +389,6 @@ body {
     display: flex;
 }
 
-/* Área de Resultado e Descrição do IMC */
 .imc-descricao {
     font-size: 0.95rem;
     color: var(--text-muted);
@@ -422,7 +419,6 @@ body {
     letter-spacing: -1px;
 }
 
-/* Modificado para virar uma Pílula */
 .imc-classificacao-text {
     font-size: 1.1rem;
     font-weight: 700;
@@ -435,7 +431,6 @@ body {
     background-color: transparent;
 }
 
-/* Fonte do IMC */
 .imc-fonte {
     font-size: 0.85rem;
     color: var(--text-muted);
@@ -445,7 +440,6 @@ body {
     text-align: center;
 }
 
-/* Barra Horizontal de Progresso do IMC */
 .imc-bar-wrapper {
     width: 100%;
     display: flex;
@@ -460,12 +454,12 @@ body {
     height: 16px;
     border-radius: 20px;
     background: linear-gradient(to right, 
-        #5AC8FA 0%, #5AC8FA 20%, /* Abaixo do peso (<18.5) */
-        #34C759 20%, #34C759 40%, /* Normal (18.5 - 24.9) */
-        #FFD166 40%, #FFD166 60%, /* Sobrepeso (25 - 29.9) */
-        #FF9500 60%, #FF9500 75%, /* Obesidade I (30 - 34.9) */
-        #FF3B30 75%, #FF3B30 90%, /* Obesidade II (35 - 39.9) */
-        #AF52DE 90%, #AF52DE 100% /* Obesidade III (>=40) */
+        #5AC8FA 0%, #5AC8FA 20%, 
+        #34C759 20%, #34C759 40%, 
+        #FFD166 40%, #FFD166 60%, 
+        #FF9500 60%, #FF9500 75%, 
+        #FF3B30 75%, #FF3B30 90%, 
+        #AF52DE 90%, #AF52DE 100% 
     );
     box-shadow: inset 0 2px 4px rgba(0,0,0,0.15), 0 2px 6px rgba(0,0,0,0.05);
 }
@@ -537,7 +531,7 @@ body {
     -webkit-box-orient: vertical;
     overflow: hidden;
     text-overflow: ellipsis;
-    white-space: normal;
+    white-space: pre-wrap;
 }
 
 .edit-mode-ui {
@@ -738,27 +732,13 @@ body {
 }
 
 @keyframes emojiBounce {
-    0% {
-        transform: scale(0);
-        opacity: 0;
-    }
-
-    60% {
-        transform: scale(1.2);
-        opacity: 1;
-    }
-
-    100% {
-        transform: scale(1);
-        opacity: 1;
-    }
+    0% { transform: scale(0); opacity: 0; }
+    60% { transform: scale(1.2); opacity: 1; }
+    100% { transform: scale(1); opacity: 1; }
 }
 
 @keyframes fadeInText {
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+    to { opacity: 1; transform: translateY(0); }
 }
 
 .welcome-splash.fade-out {
@@ -817,7 +797,6 @@ body {
     height: 25px;
 }
 
-/* FOOTER E CONFIGURAÇÕES */
 .app-footer {
     padding: 10px 30px;
     display: flex;
@@ -856,13 +835,8 @@ body {
 }
 
 @keyframes marquee {
-    0% {
-        transform: translateX(0);
-    }
-
-    100% {
-        transform: translateX(-100%);
-    }
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-100%); }
 }
 
 .gear-btn {

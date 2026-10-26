@@ -82,7 +82,6 @@ function setupInputDigitLimits() {
             }
             inputEl.value = sanitized;
 
-            // Mostrar/Ocultar botão de limpar ("X")
             const wrapper = inputEl.parentElement;
             if (sanitized.length > 0) {
                 wrapper.classList.add('has-value');
@@ -90,21 +89,16 @@ function setupInputDigitLimits() {
                 wrapper.classList.remove('has-value');
             }
 
-            // Calcular IMC Automaticamente a cada digitação
             calcularIMC();
         });
     }
 
-    /* Peso: Máximo 6 dígitos inteiros, máximo 3 após a vírgula/ponto */
     applyLimit(pesoInput, 6, 3, 'btn-clear-peso');
-    
-    /* Altura: Máximo 3 dígitos inteiros, máximo 2 após a vírgula/ponto */
     applyLimit(alturaInput, 3, 2, 'btn-clear-altura');
 }
 
 setupInputDigitLimits();
 
-/* Função para Limpar Input pelos botões "X" */
 window.clearInput = function(inputId, btnId) {
     const input = document.getElementById(inputId);
     if (input) {
@@ -122,7 +116,7 @@ function autoResizeTextarea() {
 
 inlineInputText.addEventListener('input', autoResizeTextarea);
 
-/* --- Barra de Filtros --- */
+/* --- Barra de Filtros com Ordem Fixa (igual ao seletor de cores) --- */
 function renderFilterBar() {
     if (!filterBar) return;
     
@@ -133,9 +127,22 @@ function renderFilterBar() {
         filterBar.classList.remove('hidden');
     }
     
-    const uniqueColors = [...new Set(texts.map(t => t.color))];
+    // Ordem fixa idêntica aos seletores de cor da tela de criação/edição
+    const AVAILABLE_COLORS = [
+        '#007AFF', // Azul
+        '#FF99C8', // Rosa
+        '#FFD166', // Amarelo
+        '#5AC8FA', // Azul claro
+        '#34C759', // Verde
+        '#AF52DE', // Roxo
+        '#FF3B30'  // Vermelho
+    ];
     
-    if (uniqueColors.length === 0) {
+    const existingColors = new Set(texts.map(t => t.color));
+    // Filtra apenas as cores que estão sendo usadas em algum texto, mas mantendo a ordem estática acima
+    const activeColors = AVAILABLE_COLORS.filter(color => existingColors.has(color));
+    
+    if (activeColors.length === 0) {
         filterBar.innerHTML = '';
         filterBar.style.display = 'none';
         return;
@@ -149,7 +156,7 @@ function renderFilterBar() {
         </div>
     `;
 
-    uniqueColors.forEach(color => {
+    activeColors.forEach(color => {
         const isSelected = activeFilter === color;
         html += `<div class="filter-btn ${isSelected ? 'selected' : ''}" style="background-color: ${color}; --filter-color: ${color};" onclick="setFilter('${color}')"></div>`;
     });
@@ -185,7 +192,7 @@ function render() {
         div.style.animationDelay = `${index * 0.05}s`;
         
         let contentHtml = `
-            <div class="glow-inner card-content" onclick="!isEditMode && copyText('${item.text}', '${item.color}')">
+            <div class="glow-inner card-content" onclick="!isEditMode && copyText(${item.id})">
                 <div class="card-title">${item.title}</div>
                 <div class="card-text">${item.text}</div>
         `;
@@ -260,9 +267,12 @@ function triggerCopyFeedback(color) {
     }, 150);
 }
 
-window.copyText = function(text, color) {
-    navigator.clipboard.writeText(text).then(() => {
-        triggerCopyFeedback(color);
+window.copyText = function(id) {
+    const item = texts.find(t => t.id === id);
+    if (!item) return;
+    
+    navigator.clipboard.writeText(item.text).then(() => {
+        triggerCopyFeedback(item.color);
     });
 };
 
@@ -527,7 +537,7 @@ window.calcularIMC = function() {
     
     let classif = '';
     let color = '';
-    let pct = 0; // % na barra horizontal
+    let pct = 0;
 
     if (imcNum < 18.5) {
         classif = 'Abaixo do peso';
@@ -558,7 +568,6 @@ window.calcularIMC = function() {
     valorEl.innerText = imc;
     classifEl.innerText = classif;
     
-    // Transforma em pílula mudando a cor de fundo e garantindo contraste ideal
     classifEl.style.backgroundColor = color;
     classifEl.style.color = (color === '#FFD166' || color === '#5AC8FA') ? '#000000' : '#ffffff';
     
